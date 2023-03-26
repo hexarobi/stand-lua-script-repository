@@ -11,7 +11,9 @@ get_sub_handling_types = function(vehicle, type)
         if sub_handling_data ~= 0 then
             local GetSubHandlingType_address = get_vtable_entry_pointer(sub_handling_data, 2)
             local result = util.call_foreign_function(GetSubHandlingType_address, sub_handling_data)
-            if type and type == result then return sub_handling_data end
+            if type and type == result then
+                 return sub_handling_data
+            end
             types[#types+1] = {type = result, address = sub_handling_data}
             types.found = types.found + 1
         end
@@ -38,7 +40,7 @@ menu.slider_float(menu.my_root(), "thrust", {"heliThrust"}, "set the heli thrust
     end
 end)
 menu.action(menu.my_root(), "better heli mode", {"betterheli"}, "disabables heli auto stablization\nthis is on a per heli basis (also works for any other vehicle that has vertical flight capabilities)", function ()
-    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
+    local CflyingHandling = get_sub_handling_types(entities.get_user_vehicle_as_handle(), 2) or get_sub_handling_types(entities.get_user_vehicle_as_handle(), 1)
     if CflyingHandling then
         for _, offset in pairs(better_heli_handling_offsets) do
             memory.write_float(CflyingHandling + offset, 0)
@@ -47,4 +49,4 @@ menu.action(menu.my_root(), "better heli mode", {"betterheli"}, "disabables heli
     else
         util.toast("Failed\nget in a heli first")
     end
-end) util.keep_running()
+end)
