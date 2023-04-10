@@ -1,5 +1,5 @@
 -- LANCESCRIPT RELOADED
-script_version = 10.21
+script_version = 10.21.1
 all_used_cameras = {}
 natives_version = "1663599433"
 util.require_natives(natives_version)
@@ -1281,7 +1281,7 @@ self_root:toggle_loop(translations.laser_eyes, {"lasereyes"}, translations.laser
             -- michael / story mode character
             case 225514697:
             -- imply they're using a story mode ped i guess. i dont know what else to do unless i have data on every single ped
-            pluto_default:
+            default:
                 left_eye_id = 5956
                 right_eye_id = 6468
         end
@@ -5470,7 +5470,7 @@ local function set_up_player_actions(pid)
                 case 14: 
                     send_attacker("CLONE", pid, false, num_attackers)
                     break
-                pluto_default:
+                default:
                     send_attacker(attacker_hashes[index], pid, false, num_attackers, atkgun)
             end
     end)
