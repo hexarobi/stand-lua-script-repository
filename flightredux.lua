@@ -121,8 +121,8 @@ function get_model_size(hash)
     local minptr = memory.alloc(24)
     local maxptr = memory.alloc(24)
     MISC.GET_MODEL_DIMENSIONS(hash, minptr, maxptr)
-    min = memory.read_vector3(minptr)
-    max = memory.read_vector3(maxptr)
+    min = v3.new(minptr)
+    max = v3.new(maxptr)
     local size = {}
     size['x'] = max['x'] - min['x']
     size['y'] = max['y'] - min['y']
