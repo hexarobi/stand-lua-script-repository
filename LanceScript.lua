@@ -1,5 +1,5 @@
 -- LANCESCRIPT
-script_version = 11.0
+script_version = 11.2
 all_used_cameras = {}
 natives_version = "1676318796"
 util.require_natives(natives_version)
@@ -268,6 +268,7 @@ local friends_in_this_session = {}
 local modders_in_this_session = {}
 local friends_in_session_list = menu.list_action(players_root, translations.friends_in_session, {"friendsinsession"}, "", friends_in_this_session, function(pid, name) menu.trigger_commands("p" .. players.get_name(pid)) end)
 local modders_in_session_list = menu.list_action(players_root, translations.modders_in_session, {"moddersinsession"}, "", modders_in_this_session, function(pid, name) menu.trigger_commands("p" .. players.get_name(pid)) end)
+local recoveries_root = menu.list(online_root, translations.recoveries, {"lsrecoveries"}, "")
 local detections_root = menu.list(online_root, translations.detections, {translations.detections_cmd}, "")
 local protections_root = menu.list(online_root, translations.protections, {translations.protections_cmd}, translations.protections_desc)
 local randomizer_root = menu.list(online_root, translations.randomizer, {translations.randomizer_cmd}, translations.randomizer_desc)
@@ -288,11 +289,11 @@ local function get_stat_by_name(stat_name, character)
 end
 
 local function get_prostitutes_solicited(pid)
-    return memory.read_int(memory.script_global(1853348 + 1 + (pid * 834) + 205 + 54))
+    return memory.read_int(memory.script_global(1853910 + 1 + (pid * 862) + 205 + 54))
 end
 
 local function get_lapdances_amount(pid) 
-    return memory.read_int(memory.script_global(1853348 + 1 + (pid * 834) + 205 + 55))
+    return memory.read_int(memory.script_global(1853910 + 1 + (pid * 862) + 205 + 55))
 end
 local ap_root = menu.list(online_root, translations.all_players, {translations.all_players_cmd}, "")
 local apfriendly_root = menu.list(ap_root, translations.all_players_friendly, {translations.all_players_friendly_cmd}, "")
@@ -1276,7 +1277,7 @@ self_root:toggle_loop(translations.laser_eyes, {"lasereyes"}, translations.laser
             -- michael / story mode character
             case 225514697:
             -- imply they're using a story mode ped i guess. i dont know what else to do unless i have data on every single ped
-            pluto_default:
+            default:
                 left_eye_id = 5956
                 right_eye_id = 6468
         end
@@ -5467,7 +5468,7 @@ local function set_up_player_actions(pid)
                 case 14: 
                     send_attacker("CLONE", pid, false, num_attackers)
                     break
-                pluto_default:
+                default:
                     send_attacker(attacker_hashes[index], pid, false, num_attackers, atkgun)
             end
     end)
@@ -6037,10 +6038,10 @@ end)
 
 protections_root:toggle_loop(translations.auto_remove_bounty, {}, "", function()
     if util.is_session_started() then
-        if memory.read_int(memory.script_global(1835502 + 4 + 1 + (players.user() * 3))) == 1 then
-            memory.write_int(memory.script_global(2815059 + 1856 + 17), -1)
+        if memory.read_int(memory.script_global(1835504 + 4 + 1 + (players.user() * 3))) == 1 then
+            memory.write_int(memory.script_global(2793046 + 1886 + 17), -1)
             memory.write_int(memory.script_global(2359296 + 1 + 5149 + 13), 2880000)
-            notify(translations.removed_bounty ..memory.read_int(memory.script_global(1835502 + 4 + 1 + (players.user() * 3) + 1)).. " ")
+            notify(translations.removed_bounty ..memory.read_int(memory.script_global(1835504 + 4 + 1 + (players.user() * 3) + 1)).. " ")
         end
     end
     util.yield(5000)
@@ -6276,7 +6277,7 @@ end)
 
 -- credit to prism
 local function get_interior_player_is_in(pid)
-    return memory.read_int(memory.script_global(((0x2908D3 + 1) + (pid * 0x1C5)) + 243)) 
+    return memory.read_int(memory.script_global(2657589 + 1 + (pid * 466) + 245))
 end
 
 local player_last_positions = {}
