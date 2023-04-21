@@ -1,5 +1,5 @@
 -- LANCESCRIPT
-script_version = 11.2.1
+script_version = 11.2
 all_used_cameras = {}
 natives_version = "1676318796"
 util.require_natives(natives_version)
