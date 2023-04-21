@@ -1,5 +1,5 @@
 -- LANCESCRIPT
-script_version = 11.2
+script_version = 11.2.1
 all_used_cameras = {}
 natives_version = "1676318796"
 util.require_natives(natives_version)
@@ -313,11 +313,10 @@ local god_graphics_root = menu.list(tweaks_root, translations.god_graphics, {""}
 local lancescript_root = menu.list(menu.my_root(), translations.misc, {translations.misc_cmd}, translations.misc_desc)
 menu.action(menu.my_root(), translations.disclaimer, {}, translations.disclaimer_text, function() end)
 
-
-async_http.init("gist.githubusercontent.com", "/stakonum/d4e2f55f6f72d2cf7ec490b748099091/raw", function(result)
-    menu.hyperlink(menu.my_root(), translations.discord, result, "")
-end)
-async_http.dispatch()
+--async_http.init("gist.githubusercontent.com", "/stakonum/d4e2f55f6f72d2cf7ec490b748099091/raw", function(result)
+--    menu.hyperlink(menu.my_root(), translations.discord, result, "")
+--end)
+--async_http.dispatch()
 
 -- entity-pool gathering handling
 vehicle_uses = 0
