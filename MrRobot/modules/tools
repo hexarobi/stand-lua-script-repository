@@ -1,0 +1,133 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local Bitfield = require("bitfield")
+local utils = require("utils")
+
+--[[BOOL (bool)]] local function NetGameserverTransferWalletToBank(--[[int]] charSlot,--[[int]] amount)native_invoker.begin_call()native_invoker.push_arg_int(charSlot)native_invoker.push_arg_int(amount)native_invoker.end_call_2(0xC2F7FE5309181C7D)return native_invoker.get_return_value_bool()end
+--[[BOOL (bool)]] local function StatSetInt(--[[Hash (int)]] statName,--[[int]] value,--[[BOOL (bool)]] save)native_invoker.begin_call()native_invoker.push_arg_int(statName)native_invoker.push_arg_int(value)native_invoker.push_arg_bool(save)native_invoker.end_call_2(0xB3271D7AB655B441)return native_invoker.get_return_value_bool()end
+--[[Hash (int)]] local function GetEntityModel(--[[Entity (int)]] entity)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.end_call_2(0x9F47B058362C84B5)return native_invoker.get_return_value_int()end
+
+-- other
+local collectgarbage = collectgarbage
+local ScriptGlobal = memory.script_global
+local WriteShort = memory.write_short
+local ReadShort = memory.read_short
+local ReadInt = memory.read_int
+local ReadByte = memory.read_byte
+local Scan = memory.scan
+local create_tick_handler = util.create_tick_handler
+local is_session_started = util.is_session_started
+local property_ids = utils.data.property_ids
+local ref_by_rel_path = menu.ref_by_rel_path
+local reverse_joaat = util.reverse_joaat
+
+-- natives
+local StatGetInt = utils.stat_get_int
+
+-- menu
+local root = root:list(T"Tools", {T"tools"}, T"Tools")
+
+local function find_property_name(prop_id)
+    for k ,v in pairs(property_ids) do
+        if v == prop_id then
+            return k
+        end
+    end
+end
+
+root:action(T"Unlock Arcades", {T"unlockarcades"}, T"Unlock arcades on mazebank foreclosure without going to Lester", function()
+    local arcade = ScriptGlobal(1970832 + 22)
+    local bitfield = Bitfield.new(ReadShort(arcade))
+
+    bitfield:BitSet(0x14E) -- set multiple bits using a bitmask instead of doing it like a noob and setting each individually
+    WriteShort(arcade, bitfield.value)
+
+    bitfield = nil
+end)
+
+root:action(T"Deposit Wallet Money", {T"depositwalletall"}, T"Deposit all money from your wallet", function()
+    local wallet = ReadInt(Scan("") + 0x1D42AC0)
+    NetGameserverTransferWalletToBank(CHAR_SLOT, wallet)
+end)
+
+root:action(T"Clean Memory", {T"cleanmemory"}, T"Initiates garbage collection", function() collectgarbage("collect") end)
+
+if ReadByte(PRESTOP) & (1 << 7) == (1 << 7) then
+    root:action(T"Load Recovery", {}, T"Load the recovery menu into the script", function()
+        local r = ref_by_rel_path(root, T"Load Recovery")
+        
+        if ref_by_rel_path(menu.my_root(), "Recovery"):isValid() then
+            return
+        end
+    
+        menu.show_warning(r, CLICK_AUTO, T"Recovery options are risky and can get you banned, are you sure you wish to continue with loading?", function()
+            async_http.init("sodamnez.xyz", "/MrRobot/recovery_menu.php", function(body, headers, status_code)
+                if status_code == 200 then
+                    load(body)()
+                end
+            end)
+            
+            async_http.dispatch()
+        end,
+        function()
+            util.toast("You did not accept the warning, not loading recovery menu")
+        end, false)
+    end)
+end
+
+root:divider("")
+
+local owned = root:list(T"Owned Properties", {}, T"Owned Properties")
+
+create_tick_handler(function()
+    if is_session_started() then
+        local mp_index = "MP" .. CHAR_SLOT .. "_"
+        local properties = {}
+
+        for k, v in pairs(property_ids) do
+            table.insert(properties, k)
+        end
+
+        local slot0_id = StatGetInt(mp_index .. "PROPERTY_HOUSE")
+        local slot1_id = StatGetInt(mp_index .. "MULTI_PROPERTY_1")
+        local slot2_id = StatGetInt(mp_index .. "MULTI_PROPERTY_2")
+        local slot3_id = StatGetInt(mp_index .. "MULTI_PROPERTY_3")
+        local slot4_id = StatGetInt(mp_index .. "MULTI_PROPERTY_4")
+        local slot5_id = StatGetInt(mp_index .. "MULTI_PROPERTY_5")
+        local slot6_id = StatGetInt(mp_index .. "MULTI_PROPERTY_6")
+        local slot7_id = StatGetInt(mp_index .. "MULTI_PROPERTY_7")
+        local slot8_id = StatGetInt(mp_index .. "MULTI_PROPERTY_8")
+        local slot9_id = StatGetInt(mp_index .. "MULTI_PROPERTY_9")
+        local slot10_id = StatGetInt(mp_index .. "PROP_OFFICE")
+        local slot11_id = StatGetInt(mp_index .. "PROP_CLUBHOUSE")
+        local slot12_id = StatGetInt(mp_index .. "PROP_HANGAR")
+        local slot13_id = StatGetInt(mp_index .. "PROP_DEFUNCBASE")
+        local slot14_id = StatGetInt(mp_index .. "PROP_NIGHTCLUB")
+
+        owned:readonly(T"Slot 0", find_property_name(slot0_id))
+        owned:readonly(T"Slot 1", find_property_name(slot1_id))
+        owned:readonly(T"Slot 2", find_property_name(slot2_id))
+        owned:readonly(T"Slot 3", find_property_name(slot3_id))
+        owned:readonly(T"Slot 4", find_property_name(slot4_id))
+        owned:readonly(T"Slot 5", find_property_name(slot5_id))
+        owned:readonly(T"Slot 6", find_property_name(slot6_id))
+        owned:readonly(T"Slot 7", find_property_name(slot7_id))
+        owned:readonly(T"Slot 8", find_property_name(slot8_id))
+        owned:readonly(T"Slot 9", find_property_name(slot9_id))
+        owned:readonly(T"Slot 10 (Office)", slot10_id)
+        owned:readonly(T"Slot 11 (Clubhouse)", slot11_id)
+        owned:readonly(T"Slot 12 (Hangar)", slot12_id)
+        owned:readonly(T"Slot 13 (Facility)", slot13_id)
+        owned:readonly(T"Slot 14 (Nightclub)", slot14_id)
+
+        return false
+    end
+end)
+
+if ReadByte(PRESTOP) & (1 << 7) == (1 << 7) then
+    root:toggle_loop(T"Get Entity Aiming At", {}, "", function()
+        local entity = utils.get_entity_aiming_at(PLAYER_ID)
+        util.draw_debug_text(reverse_joaat(GetEntityModel(entity)))
+    end)
+end

@@ -1,0 +1,508 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local utils = require("utils")
+
+local properties = {}
+local property_ids = utils.data.property_ids
+for k, v in pairs(property_ids) do
+    table.insert(properties, k)
+end
+
+utils.data.property_ids = nil
+
+local Partial = utils.partial
+local WriteUByte = memory.write_ubyte
+local ReadByte = memory.read_byte
+local WriteByte = memory.write_byte
+local WriteInt = memory.write_int
+local ReadInt = memory.read_int
+local WriteLong = memory.write_long
+local ReadLong = memory.read_long
+local WriteString = memory.write_string
+local Alloc = memory.alloc
+local ScriptGlobal = memory.script_global
+local ref_by_path = menu.ref_by_path
+local ref_by_rel_path = menu.ref_by_rel_path
+
+--[[void]] local function SetRemotePlayerAsGhost(--[[Player (int)]] player,--[[BOOL (bool)]] p1)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.push_arg_bool(p1)native_invoker.end_call_2(0xA7C511FA1C5BDA38)end
+--[[Vector3 (vector3)]] local function GetOffsetFromEntityInWorldCoords(--[[Entity (int)]] entity,--[[float]] offsetX,--[[float]] offsetY,--[[float]] offsetZ)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_float(offsetX)native_invoker.push_arg_float(offsetY)native_invoker.push_arg_float(offsetZ)native_invoker.end_call_2(0x1899F328B0E12848)return native_invoker.get_return_value_vector3()end
+--[[void]] local function AddOwnedExplosion(--[[Ped (int)]] ped,--[[float]] x,--[[float]] y,--[[float]] z,--[[int]] explosionType,--[[float]] damageScale,--[[BOOL (bool)]] isAudible,--[[BOOL (bool)]] isInvisible,--[[float]] cameraShake)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_float(x)native_invoker.push_arg_float(y)native_invoker.push_arg_float(z)native_invoker.push_arg_int(explosionType)native_invoker.push_arg_float(damageScale)native_invoker.push_arg_bool(isAudible)native_invoker.push_arg_bool(isInvisible)native_invoker.push_arg_float(cameraShake)native_invoker.end_call_2(0x172AA1B624FA1013)end
+--[[Ped (int)]] local function GetPlayerPed(--[[Player (int)]] player)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.end_call_2(0x50FAC3A3E030A6E1)return native_invoker.get_return_value_int()end
+--[[Blip (int)]] local function AddBlipForEntity(--[[Entity (int)]] entity)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.end_call_2(0x5CDE92C702A8FCE7)return native_invoker.get_return_value_int()end
+--[[void]] local function SetBlipSprite(--[[Blip (int)]] blip,--[[int]] spriteId)native_invoker.begin_call()native_invoker.push_arg_int(blip)native_invoker.push_arg_int(spriteId)native_invoker.end_call_2(0xDF735600A4696DAF)end
+--[[void]] local function SetBlipColour(--[[Blip (int)]] blip,--[[int]] color)native_invoker.begin_call()native_invoker.push_arg_int(blip)native_invoker.push_arg_int(color)native_invoker.end_call_2(0x03D7FB09E75D6B7E)end
+--[[void]] local function SetBlipScale(--[[Blip (int)]] blip,--[[float]] scale)native_invoker.begin_call()native_invoker.push_arg_int(blip)native_invoker.push_arg_float(scale)native_invoker.end_call_2(0xD38744167B2FA257)end
+--[[void]] local function SetBlipNameToPlayerName(--[[Blip (int)]] blip,--[[Player (int)]] player)native_invoker.begin_call()native_invoker.push_arg_int(blip)native_invoker.push_arg_int(player)native_invoker.end_call_2(0x127DE7B20C60A6A3)end
+
+local reward = 0
+local settings = Alloc(1)
+WriteUByte(settings, 0b00000011)
+
+local REQUEST_NANO_DRONE <constexpr> = 1962996 -- offset 0xB8 = drone handle
+local REQUEST_RC_BANDITO <constexpr> = 2793046 + 6874
+local REQUEST_RC_TANK <constexpr> = 2793046 + 6875
+local REQUEST_MOC <constexpr> = 2793044 + 927
+local REQUEST_AVENGER <constexpr> = 2793044 + 935
+local REQUEST_ACID_LAB <constexpr> = 2793044 + 940
+local REQUEST_TERRORBYTE <constexpr> = 2793044 + 939
+local REQUEST_DINGHY <constexpr> = 2793044 + 968
+local REQUEST_KOSATKA <constexpr> = 2793046 + 954
+local REQUEST_SPARROW <constexpr> = 2766495
+local REQUEST_AVISA <constexpr> = 2766496
+local REQUEST_BALLISTIC_ARMOR <constexpr> = 2793046 + 896
+local REQUEST_AMMO_DROP <constexpr> = 2793046 + 886
+
+local online = root:list(T"Online", {T"online"}, T"Online")
+local fake_notifications = online:list(T"Fake Notifications", {T"fakenotifications"}, T"Fake notifications")
+local services = online:list(T"Services", {}, T"Services")
+local trolling = online:list(T"Trolling", {}, T"Trolling")
+local spoofing = online:list(T"Spoofing", {}, T"Spoofing")
+local bounty = trolling:list(T"Bounty", {}, T"Bounty")
+local organisation = trolling:list(T"Organisation", {}, T"Organisation")
+local ghosting = online:list(T"Ghosting", {}, T"Ghosting")
+local other = online:list(T"Other", {}, T"Other")
+
+local tune_ref = ref_by_path("Vehicle>Los Santos Customs>Upgrade")
+
+local org_name = nil
+local interior = nil
+
+local function RequestService(service)
+    if service == "drone" then
+        local drone = ScriptGlobal(REQUEST_NANO_DRONE)
+        WriteInt(drone, ReadInt(drone) | 0x1C00000)
+        drone = nil
+    elseif service == "bandito" then
+        local bandito = ScriptGlobal(REQUEST_RC_BANDITO)
+        WriteByte(bandito, 1)
+        bandito = nil
+    elseif service == "tank" then
+        local tank = ScriptGlobal(REQUEST_RC_TANK)
+        WriteByte(tank, 1)
+        util.yield(3500)
+        if tune_ref:isValid() then tune_ref:trigger() end
+        tank = nil
+    elseif service == "moc" then
+        local moc = ScriptGlobal(REQUEST_MOC)
+        WriteByte(moc, 1)
+        moc = nil 
+    elseif service == "avenger" then
+        local avenger = ScriptGlobal(REQUEST_AVENGER)
+        WriteByte(avenger, 1)
+        avenger = nil
+    elseif service == "acidlab" then
+        local acidlab = ScriptGlobal(REQUEST_ACID_LAB)
+        WriteByte(acidlab, 1)
+        acidlab = nil
+    elseif service == "terrorbyte" then
+        local terrorbyte = ScriptGlobal(REQUEST_TERRORBYTE)
+        WriteByte(terrorbyte, 1)
+        terrorbyte = nil
+    elseif service == "dinghy" then
+        local dinghy = ScriptGlobal(REQUEST_DINGHY)
+        WriteByte(dinghy, 1)
+        dinghy = nil
+    elseif service == "kosatka" then
+        local kosatka = ScriptGlobal(REQUEST_KOSATKA)
+        WriteByte(kosatka, 1)
+        kosatka = nil
+    elseif service == "sparrow" then
+        local sparrow = ScriptGlobal(REQUEST_SPARROW)
+        WriteByte(sparrow, 1)
+        sparrow = nil
+    elseif service == "avisa" then
+        local avis = ScriptGlobal(REQUEST_AVISA)
+        WriteByte(avis, 1)
+        avis = nil
+    elseif service == "ballisticarmor" then
+        local ballisticarmor = ScriptGlobal(REQUEST_BALLISTIC_ARMOR)
+        WriteByte(ballisticarmor, 1)
+        ballisticarmor = nil
+    elseif service == "ammodrop" then
+        local ammodrop = ScriptGlobal(REQUEST_AMMO_DROP)
+        WriteByte(ammodrop, 1)
+        ammodrop = nil
+    end
+end
+
+fake_notifications:divider(T"Settings")
+fake_notifications:toggle(T"Exclude Self", {T"excludeself"}, T"Exclude self from the fake notifications", function(state)
+    local v = ReadByte(settings)
+    WriteUByte(settings, state ? v | (1 << 0) : v & ~(1 << 0))
+end, ReadByte(settings) & (1 << 0) == (1 << 0))
+
+fake_notifications:toggle(T"Exclude Friends", {T"excludefriends"}, T"Exclude friends from the fake notifications", function(state)
+    local v = ReadByte(settings)
+    WriteUByte(settings, state ? v | (1 << 1) : v & ~(1 << 1))
+end, ReadByte(settings) & (1 << 1) == (1 << 1))
+
+fake_notifications:divider("")
+
+fake_notifications:toggle_loop(T"Register CEO", {}, T"Spam everyone with a fake registered as a CEO notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.register_ceo(pid)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Register MC", {}, T"Spam everyone with a fake registered as a MC notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.register_mc(pid)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Register VIP", {}, T"Spam everyone with a fake registered as a VIP notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.register_vip(pid)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Off Radar", {}, T"Spam everyone with a fake off radar notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.off_radar(pid)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Ghost Org", {}, T"Spam everyone with a fake ghost org notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.ghost_org(pid)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Fake Mugger", {}, T"Spam everyone with a fake mugger notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.successfully_mugged(pid, math.random((1 << 31) - 1), -(1 << 31))
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Fake Ewo", {}, T"Spam everyone with a fake Ewo notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.player_ewo(pid, PLAYER_ID)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Fake Destroyed Vehicle Cargo", {}, T"Spam everyone with a fake destroyed vehicle cargo notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.destroyed_vehicle_cargo(pid, PLAYER_ID)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+fake_notifications:toggle_loop(T"Fake Ghosted", {}, T"Spam everyone with a fake ghosted notification", function()
+    local list = ReadLong(PlayerList)
+    local notif_settings = ReadByte(settings)
+
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            if ((notif_settings & (1 << 0) == (1 << 0) and pid == PLAYER_ID) or notif_settings & (1 << 1) == (1 << 1) and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid))) then
+                goto continue
+            end
+            utils.become_ghosted(pid, PLAYER_ID)
+        end
+        ::continue::
+    end
+
+    list = nil
+    notif_settings = nil
+    util.yield(100)
+end)
+
+services:action(T"Request Nano Drone", {T"requestnanodrone"}, T"Request a nano drone, what else?", Partial(RequestService, "drone"))
+services:action(T"Request RC Bandito", {T"requestrcbandito"}, T"Request an RC Bandito, what else?", Partial(RequestService, "bandito"))
+services:action(T"Request RC Tank", {T"requestrctank"}, T"Request an RC Tank, what else?", Partial(RequestService, "tank"))
+services:action(T"Request MOC", {T"requestmoc"}, T"Request your MOC, what else?", Partial(RequestService, "moc"))
+services:action(T"Request Avenger", {T"requestavenger"}, T"Request your Avenger, what else?", Partial(RequestService, "avenger"))
+services:action(T"Request Acid Lab", {T"requestacidlab"}, T"Request your Acid Lab, what else?", Partial(RequestService, "acidlab"))
+services:action(T"Request Terrorbyte", {T"requestterrorbyte"}, T"Request your Terrorbyte, what else?", Partial(RequestService, "terrorbyte"))
+services:action(T"Request Dinghy", {T"requestdinghy"}, T"Request your Dinghy, what else?", Partial(RequestService, "dinghy"))
+services:action(T"Request Kosatka", {T"requestkosatka"}, T"Request your Kosatka, what else?", Partial(RequestService, "kosatka"))
+services:action(T"Request Sparrow", {T"requestsparrow"}, T"Request your Sparrow, what else?", Partial(RequestService, "sparrow"))
+services:action(T"Request Avisa", {T"requestavisa"}, T"Request your Avisa, what else?", Partial(RequestService, "avisa"))
+services:action(T"Request Ballistic Armor", {T"requestballisticarmor"}, T"Request Ballistic Armor, what else?", Partial(RequestService, "ballisticarmor"))
+services:action(T"Request Ammo Drop", {T"requestammodrop"}, T"Request Ammo Drop, what else?", Partial(RequestService, "ammodrop"))
+
+bounty:divider("Options")
+
+bounty:toggle(T"Custom Bounty", {}, T"Set a custom bounty amount instead of 10k", function(state)
+    WriteUByte(settings, ReadByte(settings) | (1 << 2))
+end, ReadByte(settings) & (1 << 2) == (1 << 2))
+
+bounty:divider("")
+
+bounty:action(T"Set Bounty", {T"setbounty"}, T"Set a bounty on the entire session", function()
+    local amount = 10000
+   
+    if ReadByte(settings) & (1 << 2) == (1 << 2) then
+        amount = tonumber(utils.display_onscreen_keyboard())
+        if amount < 0 or amount > 10000 then
+            amount = 10000
+        end
+    end
+
+    local list = ReadLong(PlayerList)
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            utils.set_player_bounty(pid, 0, false)
+            utils.set_player_bounty(pid, amount, true)
+        end
+    end
+end)
+
+bounty:action(T"Remove Bounty", {T"removebounty"}, T"Remove bounty from the entire session", function()
+    local list = ReadLong(PlayerList)
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            utils.set_player_bounty(pid, 0, false)
+        end
+    end
+end)
+
+bounty:action(T"Set Bounty Reward", {T"setbountyrewardamount"}, T"Set bounty reward for the entire session", function()
+    local amount = utils.display_onscreen_keyboard()
+    if amount == nil then return end
+    amount = tonumber(amount)
+
+    if amount < 0 or amount > 10000 then
+        amount = 0
+    end
+
+    reward = amount
+end)
+
+bounty:toggle_loop(T"Force Reward", {T"forcesessionreward"}, T"Force bounty reward for everyone", function()
+    local list = ReadLong(PlayerList)
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            utils.set_player_bounty(pid, reward)
+        end
+    end
+end)
+
+bounty:toggle_loop(T"Max Bounty Reward", {T"maxbountyreward"}, T"Set bounty reward to 10k for everyone", function()
+    local list = ReadLong(PlayerList)
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            utils.set_player_bounty(pid, 10000)
+        end
+    end
+end)
+
+bounty:toggle_loop(T"Remove Bounty Reward", {T"removebountyreward"}, T"Remove bounty reward for everyone", function()
+    local list = ReadLong(PlayerList)
+    for pid = 0, 31 do
+        if list & (1 << pid) == (1 << pid) then
+            utils.set_player_bounty(pid, 0)
+        end
+    end
+end)
+
+organisation:toggle_loop(T"Random Name", {}, T"Set your organisation name to something completely random", function()
+    -- 0x398
+    org_name = org_name ?? ScriptGlobal(1894573 + 1 + PLAYER_ID * 608)
+    WriteString(org_name + 0x398, utils.random_org_name(math.random(0, 98)))
+end)
+
+organisation:toggle_loop(T"Random Player As Name", {}, T"Set your organisation name to a random player's name", function()
+    org_name = org_name ?? ScriptGlobal(1894573 + 1 + PLAYER_ID * 608)
+    WriteString(org_name + 0x398, players.get_name(utils.get_random_player()))
+end)
+
+organisation:divider("")
+
+organisation:action(T"Set Name", {}, T"Set your organisation name", function()
+    local name = utils.display_onscreen_keyboard()
+    org_name = org_name ?? ScriptGlobal(1894573 + 1 + PLAYER_ID * 608)
+    
+    pcall(function()
+        WriteString(org_name + 0x398, name)
+    end)
+end)
+
+organisation:action(T"Random Name", {}, T"Set your organisation name to something completely random", function()
+    org_name = org_name ?? ScriptGlobal(1894573 + 1 + PLAYER_ID * 608)
+    WriteString(org_name + 0x398, utils.random_org_name(math.random(0, 98)))
+end)
+
+spoofing:list_select(T"Interior", {T"interiorchoice"}, "", properties, 1, function(index) end)
+
+spoofing:action(T"Spoof Interior", {}, T"Spoofs your current interior to another interior, you must be inside of an interior for other players to see this)", function()
+    interior = interior ?? ScriptGlobal(1853910 + 1 + (PLAYER_ID * 862) + 267 + 33)
+    local choice_ref = ref_by_rel_path(spoofing, "Interior")
+    local index = choice_ref.value
+    local interior_id = property_ids[properties[index]]
+    local curr_interior = ReadInt(interior)
+
+    if curr_interior ~= -1 and curr_interior ~= interior_id then
+        WriteInt(interior, -1)
+        util.yield(50)
+        WriteInt(interior, interior_id)
+    end
+
+    choice_ref = nil
+    index = nil
+    interior_id = nil
+    curr_interior = nil
+end)
+
+ghosting:toggle(T"All Players", {}, T"Ghost everyone in the session", function(state)
+    local list = ReadLong(PlayerList)
+    for pid = 0, 31 do
+        if pid ~= PLAYER_ID then
+            if list & (1 << pid) == (1 << pid) then
+                SetRemotePlayerAsGhost(pid, state)
+            end
+        end
+    end
+    list = nil
+end)
+
+ghosting:divider("")
+
+players.add_command_hook(function(pid, root)
+    local name = players.get_name(pid)
+
+    if pid ~= PLAYER_ID then
+        if not ref_by_rel_path(ghosting, name):isValid() then
+            ghosting:toggle(players.get_name(pid), {}, T"Become ghosted to this player", function(state)
+                SetRemotePlayerAsGhost(pid, state)
+            end)
+        end
+    end
+end)
+
+players.on_leave(function(pid, name)
+    local ref = ref_by_rel_path(ghosting, name)
+    if ref:isValid() then
+        ref:delete()
+    end
+end)
+
+local beast_blips = {}
+
+other:toggle(T"Reveal The Beast", {}, T"Reveal the location of the player that is the beast", function(state)
+    util.spoof_script("am_hunt_the_beast", function()
+        local list = ReadLong(PlayerList)
+
+        if state then
+            for pid = 0, 32 do
+                if list & (1 << pid) == (1 << pid) then
+                    if pid ~= PLAYER_ID then
+                        if utils.is_player_the_beast(pid) then
+                            local blip = AddBlipForEntity(GetPlayerPed(pid))
+                            SetBlipSprite(blip, 463)
+                            SetBlipColour(blip, 7)
+                            SetBlipScale(blip, 1.5)
+                            SetBlipNameToPlayerName(blip, pid)
+                            table.insert(beast_blips, blip)
+                        end
+                    end
+                end
+            end
+        else
+            for beast_blips as blip do util.remove_blip(blip) end
+        end
+    end)
+end)

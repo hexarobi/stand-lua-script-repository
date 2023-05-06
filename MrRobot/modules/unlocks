@@ -1,0 +1,81 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local utils = require("utils")
+
+--[[BOOL (bool)]] local function HasAchievementBeenPassed(--[[int]] achievementId)native_invoker.begin_call()native_invoker.push_arg_int(achievementId)native_invoker.end_call_2(0x867365E111A3B6EB)return native_invoker.get_return_value_bool()end
+--[[BOOL (bool)]] local function GiveAchievementToPlayer(--[[int]] achievementId)native_invoker.begin_call()native_invoker.push_arg_int(achievementId)native_invoker.end_call_2(0xBEC7076D64130195)return native_invoker.get_return_value_bool()end
+
+local achievement_data = utils.data.achievements
+local bunker = utils.data.bunker_research
+local aircraft_trade_in = utils.data.aircraft_trade_in
+
+utils.data.achievements = nil
+utils.data.bunker_research = nil
+utils.data.aircraft_trade_in = nil
+
+local ScriptGlobal = memory.script_global
+local WriteByte = memory.write_byte
+
+local function unlock_achievement(name)
+    if not HasAchievementBeenPassed(name) then
+        if GiveAchievementToPlayer(name) then
+            return true
+        else
+            return false
+        end
+    else
+        return false
+    end
+end
+
+local function unlock_all_achievements()
+    for achievement_data as name do
+        unlock_achievement(name)
+    end
+end
+
+local unlocks = root:list(T"Unlocks", {}, T"Unlocks")
+local achievements = unlocks:list(T"Achievements", {}, T"Achievements")
+local bunker_research = unlocks:list(T"Bunker Research", {}, T"Bunker Research")
+local vehicle_trade_in_prices = unlocks:list(T"Vehicle Trade-In Prices", {}, T"Vehicle Trade-In Prices")
+
+achievements:action(T"Unlock All", {}, T"Unlock All", function()
+    unlock_all_achievements()
+end)
+
+achievements:divider("")
+
+for achievement_data as name do
+    achievements:action(name, {}, "Unlock " .. name, function()
+        unlock_achievement(name)
+    end)
+end
+
+bunker_research:action("Unlock All", {}, "Unlock All", function()
+    for bunker as offset do
+        WriteByte(ScriptGlobal(262145 + offset), 1)
+    end
+end)
+
+bunker_research:divider("")
+
+for name, offset in pairs(bunker) do
+    bunker_research:action(name, {}, "Unlock " .. name, function()
+        WriteByte(ScriptGlobal(262145 + offset), 1)
+    end)
+end
+
+vehicle_trade_in_prices:action("Unlock All", {}, "Unlock All", function()
+    for aircraft_trade_in as offset do
+        WriteByte(ScriptGlobal(262145 + offset), 0)
+    end
+end)
+
+vehicle_trade_in_prices:divider("")
+
+for name, offset in pairs(aircraft_trade_in) do
+    vehicle_trade_in_prices:action(name, {}, "Unlock " .. name .. " trade-in price", function()
+        WriteByte(ScriptGlobal(262145 + offset), 0)
+    end)
+end

@@ -1,0 +1,138 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local utils = require("utils")
+
+--[[void]] local function SetPlayerWeaponDamageModifier(--[[Player (int)]] player,--[[float]] modifier)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.push_arg_float(modifier)native_invoker.end_call_2(0xCE07B9F7817AADA3)end
+
+local KOSATKA_MISSILE_COOLDOWN <constexpr> = 262145 + 30187 -- default 60000 (int)
+local KOSATKA_MISSILE_DISTANCE <constexpr> = 262145 + 30188 -- default 4000 (float)
+local TERRORBYTE_DRONE_COOLDOWN <constexpr> = 262145 + 24663 -- default 60000 (int)
+local TERRORBYTE_DISTANCE <constexpr> = 262145 + 24672 -- default 500 (float)
+local TERRORBYTE_HEIGHT <constexpr> = 262145 + 24671 -- default 200 (float)
+local TERRORBYTE_SHOCK_COOLDOWN <constexpr> = 262145 + 24664 -- default 12000 (int)
+local TERRORBYTE_BOOST_RECHARGE_TIME <constexpr> = 262145 + 24669 -- default 15000 (int)
+local TERRORBYTE_DETONATE_COUNTDOWN <constexpr> = 262145 + 24667 -- default 7000 (int)
+local TERRORBYTE_DRONE_DAMAGE_PLAYERS <constexpr> = 262145 + 24666 -- default 1 (int)
+local TERRORBYTE_DRONE_DAMAGE_PEDS <constexpr> = 262145 + 24665 -- default 1 (int)
+local TERRORBYTE_DRONE_BOOST_TIME <constexpr> = 262145 + 24668 -- default 4000 (int)
+local TERRORBYTE_DRONE_FORWARD_SPEED <constexpr> = 262145 + 24673 -- default 35 (float)
+local MOONPOOL_COOLDOWN <constexpr> = 262145 + 30909 -- default 120000 (int)
+local MK2_COOLDOWN <constexpr> = 262145 + 28408 -- default 300000 (int)
+local STRIKE_TEAM_COOLDOWN <constexpr> = 262145 + 23967 -- default 300000 (int)
+local OPPRESSOR2_FLARE_COOLDOWN <constexpr> = 262145 + 21966 -- default 9000 (int)
+local OPPRESSOR2_CHAFF_DURATION <constexpr> = 262145 + 21967 -- default 6000 (int)
+local OPPRESSOR2_CHAFF_COOLDOWN <constexpr> = 262145 + 21968 -- default 15000 (int)
+
+local ScriptGlobal = memory.script_global
+local ReadInt = memory.read_int
+local ReadShort = memory.read_short
+local ReadByte = memory.read_byte
+local ReadFloat = memory.read_float
+local ReadLong = memory.read_long
+local WriteInt = memory.write_int
+local WriteShort = memory.write_short
+local WriteByte = memory.write_byte
+local WriteUByte = memory.write_ubyte
+local WriteFloat = memory.write_float
+local WriteLong = memory.write_long
+
+local ref_by_rel_path = menu.ref_by_rel_path
+
+local cooldowns = root:list(T"Cooldowns", {T"cooldowns"}, T"Cooldowns")
+local kosatka = cooldowns:list(T"Kosatka", {T"kosatka"}, T"Kosatka")
+local terrorbyte = cooldowns:list(T"Terrorbyte", {T"terrorbyte"}, T"Terrorbyte")
+
+kosatka:toggle(T"Remove Missile Cooldown", {}, T"Remove kosatka guided missile cooldown", function(state)
+    WriteInt(ScriptGlobal(KOSATKA_MISSILE_COOLDOWN), state and 0 or 60000)
+end)
+
+kosatka:toggle(T"Remove Missile Distance", {}, T"Remove kosatka guided missile distance limit", function(state)
+    WriteFloat(ScriptGlobal(KOSATKA_MISSILE_DISTANCE), state and utils.MAX_FLOAT or 4000)
+end)
+
+terrorbyte:toggle(T"Remove Drone Cooldown", {}, T"Remove drone cooldown", function(state)
+    WriteInt(ScriptGlobal(TERRORBYTE_DRONE_COOLDOWN), state and 0 or 60000)
+end)
+
+terrorbyte:toggle(T"Unlimited Range", {}, T"Removes drone range limitation so you can take the drone anywhere on the map without losing connection", function(state)
+    WriteFloat(ScriptGlobal(TERRORBYTE_DISTANCE), state and utils.MAX_INT + 0.0 or 500)
+end)
+
+terrorbyte:toggle(T"Unlimited Height", {}, T"Removes drone height limitation so you can go as high as the sky height barrier without the drone getting destroyed", function(state)
+    WriteFloat(ScriptGlobal(TERRORBYTE_HEIGHT), state and utils.MAX_INT + 0.0 or 200)
+end)
+
+terrorbyte:toggle(T"Remove Shock Cooldown", {}, T"Remove shock cooldown", function(state)
+    WriteInt(ScriptGlobal(TERRORBYTE_SHOCK_COOLDOWN), state and 0 or 12000)
+end)
+
+terrorbyte:toggle(T"Instant Boost Recharge", {}, T"Remove boost recharge time", function(state)
+    WriteInt(ScriptGlobal(TERRORBYTE_BOOST_RECHARGE_TIME), state and 0 or 15000)
+end)
+
+terrorbyte:toggle(T"Instant Detonate", {}, T"Remove detonate countdown", function(state)
+    WriteInt(ScriptGlobal(TERRORBYTE_DETONATE_COUNTDOWN), state and 0 or 7000)
+end)
+
+terrorbyte:toggle(T"Damage Players", {}, T"Drone damage players", function(state)
+    WriteInt(ScriptGlobal(TERRORBYTE_DRONE_DAMAGE_PLAYERS), state and 1 or 0)
+end, ReadInt(ScriptGlobal(TERRORBYTE_DRONE_DAMAGE_PLAYERS)))
+
+terrorbyte:toggle(T"Damage Peds", {}, T"Drone damage peds", function(state)
+    WriteInt(ScriptGlobal(TERRORBYTE_DRONE_DAMAGE_PEDS), state and 1 or 0)
+end, ReadInt(ScriptGlobal(TERRORBYTE_DRONE_DAMAGE_PEDS)))
+
+terrorbyte:click_slider(T"Drone Boost Time", {}, T"Amount of the time the drone will boost for", 4, utils.MAX_INT, 4, 1, function(value)
+    WriteInt(ScriptGlobal(TERRORBYTE_DRONE_BOOST_TIME), value * 1000)
+end)
+
+terrorbyte:click_slider_float(T"Drone Forward Speed", {}, T"Drone forward speed", 3500.0, utils.MAX_INT + 0.0, 3500.0, 500.0, function(value)
+    WriteFloat(ScriptGlobal(TERRORBYTE_DRONE_FORWARD_SPEED), value / 100)
+end)
+
+terrorbyte:toggle(T"Instant Kill", {}, T"Allow drone to instantly kill players and peds with 1 shock", function(state)
+    local player_damage = ref_by_rel_path(terrorbyte, T"Damage Players")
+    local ped_damage = ref_by_rel_path(terrorbyte, T"Damage Peds")
+    local instant_kill = ref_by_rel_path(terrorbyte, T"Instant Kill")
+
+    if player_damage.value or ped_damage.value then
+        if utils.is_player_using_drone(PLAYER_ID) then
+            SetPlayerWeaponDamageModifier(players.user_ped(), state and 1000.0 or 1.0)
+        else
+            instant_kill.value = false
+        end
+    else
+        instant_kill.value = false
+    end
+end)
+
+cooldowns:divider("")
+
+cooldowns:toggle(T"Remove Moonpool Cooldown", {}, T"Remove moonpool request cooldown", function(state)
+    WriteInt(ScriptGlobal(MOONPOOL_COOLDOWN), state and 0 or 120000)
+end)
+
+cooldowns:toggle(T"Remove MK2 Cooldown", {}, T"Remove Oppressor MKII request cooldown", function(state)
+    WriteInt(ScriptGlobal(MK2_COOLDOWN), state and 0 or 300000)
+end)
+
+cooldowns:toggle(T"Remove Strike Team Cooldown", {}, T"Remove strike team request cooldown", function(state)
+    WriteInt(ScriptGlobal(STRIKE_TEAM_COOLDOWN), state and 0 or 300000)
+end)
+
+cooldowns:toggle_loop(T"Remove Orbital Cannon Cooldown", {}, T"Remove orbital cannon cooldown", function()
+    StatSetInt(util.joaat(CHAR_INDEX .. "ORBITAL_CANNON_COOLDOWN"), 0, true)
+end)
+
+cooldowns:toggle(T"Remove MK2 Chaff Cooldown", {}, T"Remove Oppressor MKII chaff cooldown", function(state)
+    WriteInt(ScriptGlobal(OPPRESSOR2_CHAFF_COOLDOWN), state and 0 or 15000)
+end)
+
+cooldowns:toggle(T"Remove MK2 Flare Cooldown", {}, T"Remove Oppressor MKII flare cooldown", function(state)
+    WriteInt(ScriptGlobal(OPPRESSOR2_FLARE_COOLDOWN), state and 0 or 6000)
+end)
+
+cooldowns:toggle(T"Infinite Chaff Duration", {}, T"Make Oppressor MKII Chaff last forever", function(state)
+    WriteInt(ScriptGlobal(OPPRESSOR2_CHAFF_DURATION), state and utils.MAX_INT or 9000)
+end)

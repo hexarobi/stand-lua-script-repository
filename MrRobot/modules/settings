@@ -1,0 +1,42 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local utils = require("utils")
+local entities = entities
+local ReadByte = memory.read_byte
+local create_tick_handler = util.create_tick_handler
+local draw_debug_text = util.draw_debug_text
+
+if ReadByte(PRESTOP) & (1 << 7) == (1 << 7) then
+    create_tick_handler(function()
+        draw_debug_text(math.floor(collectgarbage("count")))
+    end)
+end
+
+--[[Vector3 (vector3)]] local function GetOffsetFromEntityInWorldCoords(--[[Entity (int)]] entity,--[[float]] offsetX,--[[float]] offsetY,--[[float]] offsetZ)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_float(offsetX)native_invoker.push_arg_float(offsetY)native_invoker.push_arg_float(offsetZ)native_invoker.end_call_2(0x1899F328B0E12848)return native_invoker.get_return_value_vector3()end
+
+-- utils
+local simulate_control_key = utils.simulate_control_key
+
+local function error_is_active()
+    local banner = memory.script_global(4536673) -- global is from UnknownCheats
+    return memory.read_int(banner) ~= 0 or memory.read_int(banner + 0x8) ~= 0
+end
+
+error_is_active = utils.lru_cache(8)(error_is_active)
+
+root = root:list(T"Settings", {T"settings"}, T"Settings")
+
+root:toggle_loop(T"Auto Accept Transaction Errors", {}, T"Automatically accept transaction errors for you", function()
+    if error_is_active() then
+        simulate_control_key(201, 1)
+        for entities.get_all_pickups_as_pointers() as entity do
+            local pos = entities.get_position(entity)
+            local player_pos = GetOffsetFromEntityInWorldCoords(players.user_ped(), 0, 0, 0)
+
+            if utils.distance(pos, player_pos) < 10.0 then
+                entities.delete_by_pointer(entity)
+            end
+        end
+    end
+end)

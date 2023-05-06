@@ -1,0 +1,142 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local utils = require("utils")
+
+local setmetatable = setmetatable
+local pairs = pairs
+local collectgarbage = collectgarbage
+local remove_blip = util.remove_blip
+local on_pre_stop = util.on_pre_stop
+local get_all_pickups_as_pointers = entities.get_all_pickups_as_pointers
+local get_position = entities.get_position
+local reverse_joaat = util.reverse_joaat
+local ref_by_rel_path = menu.ref_by_rel_path
+local ref_by_path = menu.ref_by_path
+local stop_thread = util.stop_thread
+local get_model_hash = entities.get_model_hash
+local pointer_to_handle = entities.pointer_to_handle
+local joaat = util.joaat
+local godmode_ref = ref_by_path("Self>Immortality")
+
+local ReadByte = memory.read_byte
+local ReadInt = memory.read_int
+local Alloc = memory.alloc
+
+local casino_cards = utils.data.casino_cards
+local signal_jammers = utils.data.signal_jammers
+
+local blips = setmetatable({casino={}, jammers={}}, {
+    __index = blips,
+    __gc = function(self)
+        for _, blip in pairs(self.casino) do
+            remove_blip(blip)
+        end
+
+        for _, blip in pairs(self.jammers) do
+            remove_blip(blip)
+        end
+    end
+})
+
+on_pre_stop(function()
+    blips = nil
+    collectgarbage("collect")
+end)
+
+utils.data.casino_cards = nil
+utils.data.signal_jammers = nil
+
+local ptr = Alloc(4)
+
+--[[void]] local function SetEntityCoords(--[[Entity (int)]] entity,--[[float]] xPos,--[[float]] yPos,--[[float]] zPos,--[[BOOL (bool)]] xAxis,--[[BOOL (bool)]] yAxis,--[[BOOL (bool)]] zAxis,--[[BOOL (bool)]] clearArea)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_float(xPos)native_invoker.push_arg_float(yPos)native_invoker.push_arg_float(zPos)native_invoker.push_arg_bool(xAxis)native_invoker.push_arg_bool(yAxis)native_invoker.push_arg_bool(zAxis)native_invoker.push_arg_bool(clearArea)native_invoker.end_call_2(0x06843DA7060A026B)end
+--[[void]] local function AddOwnedExplosion(--[[Ped (int)]] ped,--[[float]] x,--[[float]] y,--[[float]] z,--[[int]] explosionType,--[[float]] damageScale,--[[BOOL (bool)]] isAudible,--[[BOOL (bool)]] isInvisible,--[[float]] cameraShake)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_float(x)native_invoker.push_arg_float(y)native_invoker.push_arg_float(z)native_invoker.push_arg_int(explosionType)native_invoker.push_arg_float(damageScale)native_invoker.push_arg_bool(isAudible)native_invoker.push_arg_bool(isInvisible)native_invoker.push_arg_float(cameraShake)native_invoker.end_call_2(0x172AA1B624FA1013)end
+--[[Blip (int)]] local function AddBlipForCoord(--[[float]] x,--[[float]] y,--[[float]] z)native_invoker.begin_call()native_invoker.push_arg_float(x)native_invoker.push_arg_float(y)native_invoker.push_arg_float(z)native_invoker.end_call_2(0x5A039BB0BCA604B6)return native_invoker.get_return_value_int()end
+--[[void]] local function SetBlipSprite(--[[Blip (int)]] blip,--[[int]] spriteId)native_invoker.begin_call()native_invoker.push_arg_int(blip)native_invoker.push_arg_int(spriteId)native_invoker.end_call_2(0xDF735600A4696DAF)end
+--[[Vector3 (vector3)]] local function GetOffsetFromEntityInWorldCoords(--[[Entity (int)]] entity,--[[float]] offsetX,--[[float]] offsetY,--[[float]] offsetZ)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_float(offsetX)native_invoker.push_arg_float(offsetY)native_invoker.push_arg_float(offsetZ)native_invoker.end_call_2(0x1899F328B0E12848)return native_invoker.get_return_value_vector3()end
+--[[BOOL (bool)]] local function StatGetInt(--[[Hash (int)]] statHash,--[[int* (pointer)]] outValue,--[[int]] p2)native_invoker.begin_call()native_invoker.push_arg_int(statHash)native_invoker.push_arg_pointer(outValue)native_invoker.push_arg_int(p2)native_invoker.end_call_2(0x767FBC2AC802EF3D)return native_invoker.get_return_value_bool()end
+
+local collectables = root:list(T"Collectables", {}, T"Collectables collectibles make up your fucking mind Rockstar")
+local casino = collectables:list(T"Casino", {}, T"Casino")
+local jammers = collectables:list(T"Signal Jammers", {}, T"Signal Jammers")
+
+casino:toggle(T"Show All Cards", {}, T"Adds a blip at location of each card", function(state)
+    if state then
+        for i, vector in pairs(casino_cards) do
+            local blip = AddBlipForCoord(vector.x, vector.y, vector.z)
+            SetBlipSprite(blip, 680)
+            table.insert(blips.casino, blip)
+            blip = nil
+        end
+    else
+        if ReadByte(PRESTOP) & (1 << 0) ~= (1 << 0) then
+            for i, blip in pairs(blips.casino) do
+                remove_blip(blip)
+            end
+        end
+    end
+end)
+
+casino:toggle_loop(T"Collect Nearby Cards", {}, T"Automatically collect casino cards when they're within range", function()
+    local pos = GetOffsetFromEntityInWorldCoords(players.user_ped(), 0.0, 0.0, 0.0)
+
+    for i, entity in pairs(get_all_pickups_as_pointers()) do
+        local model = reverse_joaat(get_model_hash(entity))
+
+        if model:find("vw_prop_vw_lux_card_01a") then
+            SetEntityCoords(pointer_to_handle(entity), pos.x, pos.y, pos.z, true, true, true, true)
+        end
+
+        model = nil
+    end
+
+    pos = nil
+end)
+
+casino:action(T"Teleport To Cards", {}, T"Teleports you to each card location and collects it for you", function()
+    local ref = ref_by_rel_path(casino, T"Collect Nearby Cards")
+    
+    if StatGetInt(joaat("MP" .. CHAR_SLOT .. "_" .. "PLAYING_CARD_COLLECTED"), ptr, -1)  then
+        if ReadInt(ptr) >= 54 then
+            util.stop_thread()
+        end
+    end
+
+    if ref:isValid() then ref.value = true end
+
+    for i, vector in pairs(casino_cards) do
+        SetEntityCoords(players.user_ped(), vector.x, vector.y, vector.z, true, true, true, true)
+        util.yield(4000)
+    end
+
+    if ref:isValid() then ref.value = false end
+    ref = nil
+end)
+
+jammers:toggle(T"Show All Jammers", {}, T"Adds a blip showing the location of each jammer on the map", function(state)
+    if state then
+        for i, vector in pairs(signal_jammers) do
+            local blip = AddBlipForCoord(vector.x, vector.y, vector.z)
+            SetBlipSprite(blip, 162)
+            table.insert(blips.jammers, blip)
+        end
+    else
+        for i, blip in pairs(blips.jammers) do
+            util.remove_blip(blip)
+        end
+    end
+end)
+
+jammers:action(T"Unlock Avi Schwartzman", {}, T"Unlocks Avi Schwartzman", function()
+    godmode_ref.value = true
+
+    for i, jammer in pairs(signal_jammers) do
+        SetEntityCoords(players.user_ped(), jammer.x, jammer.y, jammer.z, true, true, true, true)
+        util.yield(500)
+        AddOwnedExplosion(players.user_ped(), jammer.x, jammer.y, jammer.z, 1, utils.MAX_INT, false, true, 0.0)
+        AddOwnedExplosion(players.user_ped(), jammer.x, jammer.y, jammer.z, 1, utils.MAX_INT, false, true, 0.0)
+        util.yield(1000)
+    end
+
+    godmode_ref.value = false
+end)

@@ -1,0 +1,51 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local fs = filesystem
+local script_custom = fs.scripts_dir() .. "/MrRobot/custom"
+
+local custom = nil
+custom = root:list(T"Module Loader", {}, T"Load custom modules into the script, within your custom module you can extend the functionality of the script and add things that you want into it, this cannot be used for loading scripts like AcjokerScript, NovaScript, LanceScript, Kepler, SoulScript, HexaScript", function()
+    util.show_corner_help(T"All custom modules are loaded from the MrRobot/custom folder, you can add your own modules into this folder but you need to make sure that the files do not have an extension or auto-updaters (such as hexarobi's auto-updater)")
+end)
+for fs.list_files(script_custom) as file do
+    local name = file:match("^.+/(.+)$"):gsub("\\", "/"):sub(8)
+    local mod_list = custom:list(name, {}, "")
+    mod_list:action(T"Load", {}, T"Load the module", function()
+        menu.my_root = || -> mod_list
+        local load_module = true
+        local fp <close> = assert(io.open(file))
+        local content = fp:read("*all")
+        fp:close()
+
+        if content:match("raw.githubusercontent.com") then
+            load_module = false
+        elseif content:match("/hexarobi/stand-lua-auto-updater/main/auto-updater.lua") then
+            load_module = false
+        elseif content:match('pcall(require, "auto-updater")') then
+            load_module = false
+        elseif content:match("auto-updater") then
+            load_module = false
+        end
+
+        content = nil
+        collectgarbage("collect")
+        
+        if load_module then
+            if package.loaded[name] ~= nil then
+                util.toast(T"Module already loaded" .. ": " .. name)
+            else
+                menu.ref_by_rel_path(mod_list, "Load").visible = false
+                local status, err = pcall(require, name)
+                if not status then
+                    util.log(err)
+                else
+                    util.toast(T"Successfully loaded module" .. ": " .. name)
+                end
+            end
+        else
+            util.toast(T"Wtf you doing? this module is using an auto-updater, aborting load")
+        end
+        menu.my_root = || -> root
+    end)
+end

@@ -1,0 +1,794 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local utils = require("utils")
+
+--[[void]] local function SeethroughSetHighlightNoise(--[[float]] noise)native_invoker.begin_call()native_invoker.push_arg_float(noise)native_invoker.end_call_2(0x1636D7FC127B10D2)end
+--[[Hash (int)]] local function GetPedAmmoTypeFromWeapon(--[[Ped (int)]] ped,--[[Hash (int)]] weaponHash)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_int(weaponHash)native_invoker.end_call_2(0x7FEAD38B326B9F74)return native_invoker.get_return_value_int()end
+--[[Vector3 (vector3)]] local function GetPedBoneCoords(--[[Ped (int)]] ped,--[[int]] boneId,--[[float]] offsetX,--[[float]] offsetY,--[[float]] offsetZ)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_int(boneId)native_invoker.push_arg_float(offsetX)native_invoker.push_arg_float(offsetY)native_invoker.push_arg_float(offsetZ)native_invoker.end_call_2(0x17C07FC640E86B4E)return native_invoker.get_return_value_vector3()end
+--[[Ped (int)]] local function GetPlayerPed(--[[Player (int)]] player)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.end_call_2(0x43A66C31C68491C0)return native_invoker.get_return_value_int()end
+--[[BOOL (bool)]] local function IsPedInAnyVehicle(--[[Ped (int)]] ped,--[[BOOL (bool)]] atGetIn)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_bool(atGetIn)native_invoker.end_call_2(0x997ABD671D25CA0B)return native_invoker.get_return_value_bool()end
+--[[void]] local function SeethroughSetFadeStartdistance(--[[float]] distance)native_invoker.begin_call()native_invoker.push_arg_float(distance)native_invoker.end_call_2(0xA78DE25577300BA1)end
+--[[Hash (int)]] local function GetSelectedPedWeapon(--[[Ped (int)]] ped)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.end_call_2(0x0A6DB4965674D243)return native_invoker.get_return_value_int()end
+--[[void]] local function SeethroughSetMaxThickness(--[[float]] thickness)native_invoker.begin_call()native_invoker.push_arg_float(thickness)native_invoker.end_call_2(0x0C8FAC83902A62DF)end
+--[[BOOL (bool)]] local function HasPedGotWeaponComponent(--[[Ped (int)]] ped,--[[Hash (int)]] weaponHash,--[[Hash (int)]] componentHash)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_int(weaponHash)native_invoker.push_arg_int(componentHash)native_invoker.end_call_2(0xC593212475FAE340)return native_invoker.get_return_value_bool()end
+--[[void]] local function SeethroughSetFadeEnddistance(--[[float]] distance)native_invoker.begin_call()native_invoker.push_arg_float(distance)native_invoker.end_call_2(0x9D75795B9DC6EBBF)end
+--[[Ped (int)]] local function GetPlayerPedScriptIndex(--[[Player (int)]] player)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.end_call_2(0x50FAC3A3E030A6E1)return native_invoker.get_return_value_int()end
+--[[Vector3 (vector3)]] local function GetOffsetFromEntityInWorldCoords(--[[Entity (int)]] entity,--[[float]] offsetX,--[[float]] offsetY,--[[float]] offsetZ)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_float(offsetX)native_invoker.push_arg_float(offsetY)native_invoker.push_arg_float(offsetZ)native_invoker.end_call_2(0x1899F328B0E12848)return native_invoker.get_return_value_vector3()end
+--[[float]] local function GetDistanceBetweenCoords(--[[float]] x1,--[[float]] y1,--[[float]] z1,--[[float]] x2,--[[float]] y2,--[[float]] z2,--[[BOOL (bool)]] useZ)native_invoker.begin_call()native_invoker.push_arg_float(x1)native_invoker.push_arg_float(y1)native_invoker.push_arg_float(z1)native_invoker.push_arg_float(x2)native_invoker.push_arg_float(y2)native_invoker.push_arg_float(z2)native_invoker.push_arg_bool(useZ)native_invoker.end_call_2(0xF1B760881820C952)return native_invoker.get_return_value_float()end
+--[[BOOL (bool)]] local function GetScreenCoordFromWorldCoord(--[[float]] worldX,--[[float]] worldY,--[[float]] worldZ,--[[float* (pointer)]] screenX,--[[float* (pointer)]] screenY)native_invoker.begin_call()native_invoker.push_arg_float(worldX)native_invoker.push_arg_float(worldY)native_invoker.push_arg_float(worldZ)native_invoker.push_arg_pointer(screenX)native_invoker.push_arg_pointer(screenY)native_invoker.end_call_2(0x34E82F05DF2974F5)return native_invoker.get_return_value_bool()end
+--[[BOOL (bool)]] local function GetUsingseethrough()native_invoker.begin_call()native_invoker.end_call_2(0x44B80ABAB9D80BD3)return native_invoker.get_return_value_bool()end
+--[[BOOL (bool)]] local function IsPedFacingPed(--[[Ped (int)]] ped,--[[Ped (int)]] otherPed,--[[float]] angle)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_int(otherPed)native_invoker.push_arg_float(angle)native_invoker.end_call_2(0xD71649DB0A545AA3)return native_invoker.get_return_value_bool()end
+--[[void]] local function SeethroughSetNoiseMin(--[[float]] amount)native_invoker.begin_call()native_invoker.push_arg_float(amount)native_invoker.end_call_2(0xFF5992E1C9E65D05)end
+--[[void]] local function SeethroughSetNoiseMax(--[[float]] amount)native_invoker.begin_call()native_invoker.push_arg_float(amount)native_invoker.end_call_2(0xFEBFBFDFB66039DE)end
+--[[BOOL (bool)]] local function IsPedShooting(--[[Ped (int)]] ped)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.end_call_2(0x34616828CD07F1A1)return native_invoker.get_return_value_bool()end
+--[[void]] local function AddPedAmmoByType(--[[Ped (int)]] ped,--[[Hash (int)]] ammoTypeHash,--[[int]] ammo)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_int(ammoTypeHash)native_invoker.push_arg_int(ammo)native_invoker.end_call_2(0x2472622CE1F2D45F)end
+--[[BOOL (bool)]] local function HasEntityClearLosToEntity(--[[Entity (int)]] entity1,--[[Entity (int)]] entity2,--[[int]] traceType)native_invoker.begin_call()native_invoker.push_arg_int(entity1)native_invoker.push_arg_int(entity2)native_invoker.push_arg_int(traceType)native_invoker.end_call_2(0xFCDFF7B72D23A1AC)return native_invoker.get_return_value_bool()end
+--[[void]] local function ShootSingleBulletBetweenCoordsIgnoreEntity(--[[float]] x1,--[[float]] y1,--[[float]] z1,--[[float]] x2,--[[float]] y2,--[[float]] z2,--[[int]] damage,--[[BOOL (bool)]] p7,--[[Hash (int)]] weaponHash,--[[Ped (int)]] ownerPed,--[[BOOL (bool)]] isAudible,--[[BOOL (bool)]] isInvisible,--[[float]] speed,--[[Entity (int)]] entity,--[[Any (int)]] p14)native_invoker.begin_call()native_invoker.push_arg_float(x1)native_invoker.push_arg_float(y1)native_invoker.push_arg_float(z1)native_invoker.push_arg_float(x2)native_invoker.push_arg_float(y2)native_invoker.push_arg_float(z2)native_invoker.push_arg_int(damage)native_invoker.push_arg_bool(p7)native_invoker.push_arg_int(weaponHash)native_invoker.push_arg_int(ownerPed)native_invoker.push_arg_bool(isAudible)native_invoker.push_arg_bool(isInvisible)native_invoker.push_arg_float(speed)native_invoker.push_arg_int(entity)native_invoker.push_arg_int(p14)native_invoker.end_call_2(0xE3A7742E0B7A2F8B)end
+--[[float]] local function SeethroughGetMaxThickness()native_invoker.begin_call()native_invoker.end_call_2(0x43DBAE39626CE83F)return native_invoker.get_return_value_float()end
+--[[BOOL (bool)]] local function IsEntityDead(--[[Entity (int)]] entity,--[[BOOL (bool)]] p1)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_bool(p1)native_invoker.end_call_2(0x5F9532F3B5CC2551)return native_invoker.get_return_value_bool()end
+--[[void]] local function GiveWeaponComponentToPed(--[[Ped (int)]] ped,--[[Hash (int)]] weaponHash,--[[Hash (int)]] componentHash)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_int(weaponHash)native_invoker.push_arg_int(componentHash)native_invoker.end_call_2(0xD966D51AA5B28BB9)end
+--[[int]] local function GetEntityHealth(--[[Entity (int)]] entity)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.end_call_2(0xEEF059FAD016D209)return native_invoker.get_return_value_int()end
+--[[float]] local function GetWeaponDamage(--[[Hash (int)]] weaponHash,--[[Hash (int)]] componentHash)native_invoker.begin_call()native_invoker.push_arg_int(weaponHash)native_invoker.push_arg_int(componentHash)native_invoker.end_call_2(0x3133B907D8B32053)return native_invoker.get_return_value_float()end
+--[[BOOL (bool)]] local function IsPedAPlayer(--[[Ped (int)]] ped)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.end_call_2(0x12534C348C6CB68B)return native_invoker.get_return_value_bool()end
+--[[BOOL (bool)]] local function DoesEntityExist(--[[Entity (int)]] entity)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.end_call_2(0x7239B21A38F536BA)return native_invoker.get_return_value_bool()end
+--[[void]] local function SeethroughReset()native_invoker.begin_call()native_invoker.end_call_2(0x70A64C0234EF522C)end
+--[[BOOL (bool)]] local function IsPlayerFreeAiming(--[[Player (int)]] player)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.end_call_2(0x2E397FD2ECD37C87)return native_invoker.get_return_value_bool()end
+--[[void]] local function SetSeethrough(--[[BOOL (bool)]] toggle)native_invoker.begin_call()native_invoker.push_arg_bool(toggle)native_invoker.end_call_2(0x7E08924259E08CE0)end
+
+local ScriptGlobal = memory.script_global
+local ReadInt = memory.read_int
+local ReadShort = memory.read_short
+local ReadByte = memory.read_byte
+local ReadFloat = memory.read_float
+local ReadLong = memory.read_long
+local WriteInt = memory.write_int
+local WriteShort = memory.write_short
+local WriteByte = memory.write_byte
+local WriteUByte = memory.write_ubyte
+local WriteFloat = memory.write_float
+local WriteLong = memory.write_long
+local Alloc = memory.alloc
+local collectgarbage = collectgarbage
+local ref_by_rel_path = menu.ref_by_rel_path
+
+local sx_ptr, sy_ptr = memory.alloc(4), memory.alloc(4)
+
+local sns_ammo_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "Hollow Point", "FMJ"}
+local heavy_revolver_types <const> = {"Default Clip", "Tracer", "Incendiary", "Hollow Point", "FMJ"}
+local special_carbine_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "FMJ", "Armor Piercing"}
+local bullpup_rifle_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "FMJ", "Armor Piercing"}
+local pump_shotgun_types <const> = {"Default Shells", "Dragons Breathe", "Flechette Shells", "Steel Buckshot Shells", "Explosive Slugs"}
+local marksman_rifle_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "FMJ", "Armor Piercing"}
+local pistol_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "Hollow Point", "FMJ"}
+local smg_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "Hollow Point", "FMJ"}
+local assault_rifle_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "FMJ", "Armor Piercing"}
+local carbine_rifle_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "FMJ", "Armor Piercing"}
+local combat_mg_types <const> = {"Default Clip", "Extended Clip", "Tracer", "Incendiary", "FMJ", "Armor Piercing"}
+local heavy_sniper_types <const> = {"Default Clip", "Extended Clip", "Incendiary", "FMJ", "Armor Piercing", "Explosive"}
+
+local heavy_sniper_scopes <const> = {"Zoom Scope", "Advanced Scope", "Night Vision Scope", "Thermal Scope"}
+
+local weapons_hashmap <const> = {
+    ["SNS Pistol"] = util.joaat("WEAPON_SNSPISTOL_MK2"),
+    ["Heavy Revolver"] = util.joaat("WEAPON_REVOLVER_MK2"),
+    ["Special Carbine"] = util.joaat("WEAPON_SPECIALCARBINE_MK2"),
+    ["Bullpup Rifle"] = util.joaat("WEAPON_BULLPUPRIFLE_MK2"),
+    ["Pump Shotgun"] = util.joaat("WEAPON_PUMPSHOTGUN_MK2"),
+    ["Marksman Rifle"] = util.joaat("WEAPON_MARKSMANRIFLE_MK2"),
+    ["Pistol"] = util.joaat("WEAPON_PISTOL_MK2"),
+    ["SMG"] = util.joaat("WEAPON_SMG_MK2"),
+    ["Assault Rifle"] = util.joaat("WEAPON_ASSAULTRIFLE_MK2"),
+    ["Carbine Rifle"] = util.joaat("WEAPON_CARBINERIFLE_MK2"),
+    ["Combat MG"] = util.joaat("WEAPON_COMBATMG_MK2"),
+    ["Heavy Sniper"] = util.joaat("WEAPON_HEAVYSNIPER_MK2")
+}
+
+local weapons_names <const> = {
+    "None",
+    "SNS Pistol",
+    "Heavy Revolver",
+    "Special Carbine",
+    "Bullpup Rifle",
+    "Pump Shotgun",
+    "Marksman Rifle",
+    "Pistol",
+    "SMG",
+    "Assault Rifle",
+    "Carbine Rifle",
+    "Combat MG",
+    "Heavy Sniper"
+}
+
+-- doing this in a table is a complete waste of memory, but it's easier to read
+local bones <const> = {
+    31086, -- head (SKEL_Head)
+    39317, -- neck (SKEL_Neck_1)
+    24816, -- spine (SKEL_Spine_Root)
+    14201, -- left foot (SKEL_L_Foot)
+    51826, -- right leg (SKEL_R_Calf)
+    60309, -- left hand (SKEL_L_Hand)
+    57005, -- right hand (SKEL_R_Hand)
+    11816, -- pelvis (SKEL_Pelvis)
+    58271, -- left leg (SKEL_L_Calf)
+    63931, -- left knee (SKEL_L_Thigh)
+    61163, -- left arm (SKEL_L_UpperArm)
+}
+
+local aimbot_settings <const> = Alloc(8)
+local ped_aimbot_settings = 31086 | (1 << 17) | (100 << 25) -- this is wasing more memory than i'd like, but reading/writing arbitrary byte sizes is not in Stand's API
+local damage <const> = Alloc(4)
+local targets_bitfield <const> = Alloc(4)
+WriteLong(aimbot_settings, 0x1513 | (31086 << 16) | (1 << 33) | (180 << 41) | (100 << 49))
+WriteInt(damage, 100)
+WriteInt(targets_bitfield, 0)
+
+--[[
+    player
+    1 << 0 = fov enabled
+    1 << 1 = custom fov
+    1 << 2 = ignore vehicles
+    1 << 3 = target friends
+    1 << 4 = show target
+    1 << 5 = damage override
+    1 << 6 = chance based
+]]
+
+--[[
+    ped
+    1 << 8 = fov enabled
+    1 << 9 = ignore vehicles
+    1 << 10 = show target
+    1 << 11 = damage override
+    1 << 12 = visible check
+    1 << 13 = in fov
+]]
+
+local function ammo_type_to_hash(type, weapon)
+    local weapon_name = util.reverse_joaat(weapon)
+    weapon_name = weapon_name:gsub("WEAPON_", "")
+
+    local comp = "COMPONENT_" .. weapon_name .. "_CLIP_"
+
+    if type == "Default Clip" or type == "Default Shells" then
+        return util.joaat(comp .. "01")
+    elseif type == "Extended Clip" then
+        return util.joaat(comp .. "02")
+    elseif type == "Tracer" then
+        return util.joaat(comp .. "TRACER")
+    elseif type == "Incendiary" then
+        return util.joaat(comp .. "INCENDIARY")
+    elseif type == "Hollow Point" then
+        return util.joaat(comp .. "HOLLOWPOINT")
+    elseif type == "FMJ" then
+        return util.joaat(comp .. "FMJ")
+    elseif type == "Explosive" then
+        return util.joaat(comp .. "EXPLOSIVE")
+    elseif type == "Armor Piercing" then
+        return util.joaat(comp .. "ARMORPIERCING")
+    elseif type == "Dragons Breathe" then
+        return util.joaat(comp .. "INCENDIARY")
+    elseif type == "Flechette Shells" then
+        return util.joaat(comp .. "HOLLOWPOINT")
+    elseif type == "Steel Buckshot Shells" then
+        return util.joaat(comp .. "ARMORPIERCING")
+    elseif type == "Explosive Slugs" then
+        return util.joaat(comp .. "EXPLOSIVE")
+    end
+end
+
+local function give_component(weapon_hash, component_hash)
+    if not HasPedGotWeaponComponent(players.user_ped(), weapon_hash, component_hash) then
+        GiveWeaponComponentToPed(players.user_ped(), weapon_hash, component_hash)
+        local ammo_type = GetPedAmmoTypeFromWeapon(players.user_ped(), weapon_hash)
+        AddPedAmmoByType(players.user_ped(), ammo_type, 9999)
+    end
+end
+
+local function world_to_screen(pos)
+    if GetScreenCoordFromWorldCoord(pos.x, pos.y, pos.z, sx_ptr, sy_ptr) then
+        local sx, sy = ReadFloat(sx_ptr), ReadFloat(sy_ptr)
+        return {x = sx, y = sy}
+    end
+end
+
+local function bone_within_bounds(ped, bone, bounds, fov)
+    local bone_coords = GetPedBoneCoords(ped, bone, 0.0, 0.0, 0.0)
+    local world_coords = world_to_screen(bone_coords)
+    bone_coords.z = bone_coords.z + 0.15
+    
+    if world_coords ~= nil then
+        local x1, y1 = world_coords.x, world_coords.y
+        local x2, y2 = bounds.x, bounds.y
+        local dist = math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+
+        if dist <= fov / 180 then
+            return true
+        else
+            return false
+        end
+    end
+end
+
+local function get_closest_ped(visible, distance, only_players, ignore_vehicles)
+    local closest_ped = nil
+    local ignore_ped = false
+    visible = visible or true
+    distance = distance or 100.0
+    only_players = only_players or false
+    ignore_vehicles = ignore_vehicles or false
+
+    for i, entity in pairs(entities.get_all_peds_as_pointers()) do
+        local ped = entities.pointer_to_handle(entity)
+        if ped ~= 0 and ped ~= players.user_ped() then
+            if DoesEntityExist(ped) and not IsEntityDead(ped) and IsPedAPlayer(ped) == only_players then
+                if IsPedInAnyVehicle(ped) and ignore_vehicles then
+                    ignore_ped = true
+                else
+                    ignore_ped = false
+                end
+
+                if not ignore_ped then
+                    if visible then
+                        if HasEntityClearLosToEntity(players.user_ped(), ped, 17) then
+                            local player_pos = GetOffsetFromEntityInWorldCoords(players.user_ped(), 0.0, 0.0, 0.0)
+                            local ped_pos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 0.0, 0.0)
+                            local dist = math.sqrt((ped_pos.x - player_pos.x) ^ 2 + (ped_pos.y - player_pos.y) ^ 2 + (ped_pos.z - player_pos.z) ^ 2)
+    
+                            if dist <= distance then
+                                if closest_ped == nil then
+                                    closest_ped = ped
+                                else
+                                    local closest_ped_pos = GetOffsetFromEntityInWorldCoords(closest_ped, 0.0, 0.0, 0.0)
+                                    local closest_ped_dist = math.sqrt((closest_ped_pos.x - player_pos.x) ^ 2 + (closest_ped_pos.y - player_pos.y) ^ 2 + (closest_ped_pos.z - player_pos.z) ^ 2)
+    
+                                    if dist < closest_ped_dist then
+                                        closest_ped = ped
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        local dist = math.sqrt((ped_pos.x - player_pos.x) ^ 2 + (ped_pos.y - player_pos.y) ^ 2 + (ped_pos.z - player_pos.z) ^ 2)
+    
+                        if dist <= distance then
+                            if closest_ped == nil then
+                                closest_ped = ped
+                            else
+                                local closest_ped_pos = GetOffsetFromEntityInWorldCoords(closest_ped, 0.0, 0.0, 0.0)
+                                local closest_ped_dist = math.sqrt((closest_ped_pos.x - player_pos.x) ^ 2 + (closest_ped_pos.y - player_pos.y) ^ 2 + (closest_ped_pos.z - player_pos.z) ^ 2)
+    
+                                if dist < closest_ped_dist then
+                                    closest_ped = ped
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return closest_ped
+end
+
+local function get_closest_player(include_friends)
+    local closest_player = nil
+    local list = ReadLong(PlayerList)
+    local targets = ReadInt(targets_bitfield)
+    include_friends = include_friends or false
+
+    for pid = 0, 32 do
+        if list & (1 << pid) == (1 << pid) then
+            if pid == PLAYER_ID then continue end
+            if not include_friends and list & (1 << (0x20 + pid)) == (1 << (0x20 + pid)) then continue end
+            if targets & (1 << pid) ~= (1 << pid) then continue end
+
+            local ped = GetPlayerPed(pid)
+            if ped ~= 0 and not IsEntityDead(ped) then
+                local player_pos = GetOffsetFromEntityInWorldCoords(players.user_ped(), 0.0, 0.0, 0.0)
+                local ped_pos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 0.0, 0.0)
+                local dist = GetDistanceBetweenCoords(player_pos.x, player_pos.y, player_pos.z, ped_pos.x, ped_pos.y, ped_pos.z, true)
+
+                if dist <= 99999.9 then -- use a really high number so that it doesn't matter how far away the player is
+                    if closest_player == nil then
+                        closest_player = pid
+                    else
+                        local closest_ped = GetPlayerPed(closest_player)
+                        local closest_ped_pos = GetOffsetFromEntityInWorldCoords(closest_ped, 0.0, 0.0, 0.0)
+                        local closest_ped_dist = GetDistanceBetweenCoords(player_pos.x, player_pos.y, player_pos.z, closest_ped_pos.x, closest_ped_pos.y, closest_ped_pos.z, true)
+
+                        if dist < closest_ped_dist then
+                            closest_player = pid
+                        end
+                    end
+                end
+            end
+        end
+
+        ::continue::
+    end
+
+    list = nil
+    targets = nil
+    include_friends = nil
+
+    return closest_player
+end
+
+local weapons = root:list(T"Weapons", {}, T"Weapons options")
+local weapons_mk2 = weapons:list(T"Weapons MK2", {}, T"Weapons MK2 options")
+local thermal = weapons:list(T"Thermal", {}, T"Thermal")
+local aimbot = weapons:list(T"Aimbot", {}, T"Aimbot")
+
+weapons_mk2:list_select(T"Weapon", {}, T"Weapon to modify", weapons_names, 1, function(index)
+    if ReadByte(PRESTOP) & (1 << 0) == (1 << 0) then return end
+
+    for i, child in pairs(weapons_mk2:getChildren()) do
+        if child.menu_name ~= "Weapon" then
+            child:delete()
+        end
+    end
+
+    local weapon = weapons_names[index]
+    local weapon_hash = weapons_hashmap[weapon]
+
+    if weapon == "SNS Pistol" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", sns_ammo_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(sns_ammo_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Heavy Revolver" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", heavy_revolver_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(heavy_revolver_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Special Carbine" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", special_carbine_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(special_carbine_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Bullpup Rifle" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", bullpup_rifle_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(bullpup_rifle_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Pump Shotgun" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", pump_shotgun_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(pump_shotgun_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Marksman Rifle" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", marksman_rifle_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(marksman_rifle_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Pistol" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", pistol_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(pistol_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "SMG" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", smg_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(smg_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Assault Rifle" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", assault_rifle_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(assault_rifle_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Carbine Rifle" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", carbine_rifle_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(carbine_rifle_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Combat MG" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", combat_mg_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(combat_mg_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+    elseif weapon == "Heavy Sniper" then
+        local ammo = weapons_mk2:textslider("Ammo Type", {}, "", heavy_sniper_types, function(table_index)
+            local ammo_type = ammo_type_to_hash(heavy_sniper_types[table_index], weapon_hash)
+            give_component(weapon_hash, ammo_type)
+        end)
+
+        local scope = weapons_mk2:textslider("Scope", {}, "", heavy_sniper_scopes, function(table_index)
+            local weapon_hash = util.joaat("WEAPON_HEAVYSNIPER_MK2")
+            local scope = heavy_sniper_scopes[table_index]
+            local component_hash = ""
+
+            if scope == "Zoom Scope" then
+                component_hash = util.joaat("COMPONENT_AT_SCOPE_LARGE_MK2")
+            elseif scope == "Advanced Scope" then
+                component_hash = util.joaat("COMPONENT_AT_SCOPE_MAX")
+            elseif scope == "Night Vision Scope" then
+                component_hash = util.joaat("COMPONENT_AT_SCOPE_NV")
+            elseif scope == "Thermal Scope" then
+                component_hash = util.joaat("COMPONENT_AT_SCOPE_THERMAL")
+            end
+
+            if not HasPedGotWeaponComponent(players.user_ped(), weapon_hash, component_hash) then
+                GiveWeaponComponentToPed(players.user_ped(), weapon_hash, component_hash)
+                local ammo_type = GetPedAmmoTypeFromWeapon(players.user_ped(), weapon_hash)
+                AddPedAmmoByType(players.user_ped(), ammo_type, 9999)
+            end
+        end)
+    end
+end)
+
+thermal:toggle_loop(T"ESP Thermal", {}, T"Makes thermal more op than it already is", function()
+    if GetUsingseethrough() then
+        SeethroughSetMaxThickness(SeethroughGetMaxThickness())
+        SeethroughSetNoiseMin(0.0)
+        SeethroughSetNoiseMax(0.0)
+        SeethroughSetFadeStartdistance(0.0)
+        SeethroughSetFadeEnddistance(utils.MAX_INT + 0.0)
+        SeethroughSetHighlightNoise(0.0)
+    else
+        SeethroughReset()
+    end
+end,
+function()
+    SeethroughReset()
+end)
+
+thermal:toggle_loop(T"Enable Thermal", {}, T"Allows you to toggle thermal vision while aiming with any weapon", function()
+    if IsPlayerFreeAiming(PLAYER_ID) then
+        
+        if util.is_key_down(0x45) then
+            SetSeethrough(not GetUsingseethrough())
+            SeethroughSetMaxThickness(SeethroughGetMaxThickness())
+            SeethroughSetNoiseMin(0.0)
+            SeethroughSetNoiseMax(0.0)
+            SeethroughSetFadeStartdistance(0.0)
+            SeethroughSetFadeEnddistance(utils.MAX_INT + 0.0)
+            SeethroughSetHighlightNoise(0.0)
+        end
+    else
+        SetSeethrough(false)
+    end
+
+    util.yield(100)
+end,
+function()
+    SetSeethrough(false)
+    SeethroughReset()
+end)
+
+aimbot:divider("Player Aimbot")
+
+local aimbot_bones <const> = {31086, 24816, 14201, 60309, 57005, 11816, 4103, 58271, 51826, 63931, 36864, 61163, 28252, 25260, 37193, 47495}
+local bounds <const> = {x=0.5-(0.02/2), y=0.5-(0.03/2)}
+local in_fov = false
+
+aimbot:toggle_loop("Aimbot", {}, "Enable aimbot for players", function()
+    local player = nil
+    local settings = ReadLong(aimbot_settings)
+    local list = ReadInt(PlayerList)
+
+    if settings & (1 << 1) == (1 << 1) then
+        player = get_closest_player(settings & (1 << 3) == (1 << 3))
+    else
+        for pid = 0, 32 do
+            if list & (1 << pid) == (1 << pid) then
+                if pid == PLAYER_ID then goto continue end
+                local ped = GetPlayerPed(pid)
+                if IsPedFacingPed(players.user_ped(), ped, settings >> 33 & 0xFF) then
+                    player = pid
+                    break
+                end
+            end
+
+            ::continue::
+        end
+    end
+
+    if player == nil then goto skip_iteration end
+    local ped = GetPlayerPed(player)
+    local visible = HasEntityClearLosToEntity(players.user_ped(), ped, 17)
+
+    if settings & (1 << 4) == (1 << 4) then
+        local ped_bone = GetPedBoneCoords(ped, settings >> 16 & 0x1FFFF, 0.0, 0.0, 0.0)
+        util.draw_ar_beacon(ped_bone)
+    end
+
+    if not visible then goto skip_iteration end
+
+    if settings & (1 << 0) == (1 << 0) then
+        for i, bone in pairs(aimbot_bones) do
+            if bone_within_bounds(ped, bone, bounds, settings >> 33 & 0xFF) then
+                in_fov = true
+                break
+            else
+                in_fov = false
+            end
+        end
+    else
+        in_fov = true
+    end
+
+    if IsPedShooting(players.user_ped()) then
+        if in_fov then
+            local attacker, victim = nil, nil
+            local weapon = GetSelectedPedWeapon(players.user_ped())
+            local weapon_damage = GetWeaponDamage(weapon, 0)
+
+            if settings & (1 << 5) == (1 << 5) then
+                weapon_damage = ReadShort(damage)
+            end
+
+            local in_veh = IsPedInAnyVehicle(ped, false)
+            if in_veh and settings & (1 << 2) == (1 << 2) then goto skip_iteration end
+
+            attacker = GetPedBoneCoords(players.user_ped(), 31086, 0.0, 0.0, 0.0)
+            victim = GetPedBoneCoords(ped, settings >> 16 & 0x1FFFF, 0.0, 0.0, 0.0)
+
+            if attacker == nil or victim == nil then goto skip_iteration end
+            if IsEntityDead(ped) then goto skip_iteration end
+
+            if settings & (1 << 6) == (1 << 6) then
+                if math.random(0, 100) <= settings >> 49 & 0xFF then
+                    ShootSingleBulletBetweenCoordsIgnoreEntity(attacker.x, attacker.y, attacker.z, victim.x, victim.y, victim.z, weapon_damage, true, weapon, players.user_ped(), true, false, 1.0, players.user_ped(), true)
+                end
+            else
+                ShootSingleBulletBetweenCoordsIgnoreEntity(attacker.x, attacker.y, attacker.z, victim.x, victim.y, victim.z, weapon_damage, true, weapon, players.user_ped(), true, false, 1.0, players.user_ped(), true)
+            end
+        else
+            goto skip_iteration
+        end
+    end
+
+    ::skip_iteration::
+end, function()
+    collectgarbage("collect")
+end)
+
+aimbot:toggle_loop(T"Unfair Aimbot", {}, T"Doesn't like missing", function()
+    local settings = ReadLong(aimbot_settings)
+    local player = get_closest_player(settings & (1 << 3) == (1 << 3))
+
+    if player ~= nil then
+        local ped = GetPlayerPed(player)
+        
+        if settings & (1 << 4) == (1 << 4) then
+            local ped_bone = GetPedBoneCoords(ped, settings >> 16 & 0x1FFFF, 0.0, 0.0, 0.0)
+            util.draw_ar_beacon(ped_bone)
+        end
+
+        local weapon = GetSelectedPedWeapon(players.user_ped())
+        local weapon_damage = GetEntityHealth(ped) * 5
+
+        if IsPedShooting(players.user_ped()) then
+            local enemy_head = GetPedBoneCoords(ped, 31086, 0.0, 0.0, 0.0)
+            local bullet_spawn = GetPedBoneCoords(ped, 24816, 0.0, 0.0, 0.0)
+
+            ShootSingleBulletBetweenCoordsIgnoreEntity(bullet_spawn.x, bullet_spawn.y, bullet_spawn.z, enemy_head.x, enemy_head.y, enemy_head.z, weapon_damage, true, weapon, players.user_ped(), true, false, -1.0, players.user_ped(), true)
+        end
+    end
+end,
+function()
+    collectgarbage("collect")
+end)
+
+aimbot:divider("")
+
+aimbot:toggle(T"Use FOV", {}, T"Whether or not to use FOV for the aimbot", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 0))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 0))
+    end
+end, ReadShort(aimbot_settings) & (1 << 0) == (1 << 0))
+
+aimbot:toggle(T"Custom FOV", {}, T"Whether or not to use the custom field of view system or natives", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 1))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 1))
+    end
+end, ReadShort(aimbot_settings) & (1 << 1) == (1 << 1))
+
+aimbot:toggle(T"Ignore Vehicles", {}, T"Whether or not to ignore players in vehicles", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 2))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 2))
+    end
+end, ReadShort(aimbot_settings) & (1 << 2) == (1 << 2))
+
+aimbot:toggle(T"Target Friends", {}, T"Whether or not to target friends", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 3))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 3))
+    end
+end, ReadShort(aimbot_settings) & (1 << 3) == (1 << 3))
+
+aimbot:toggle(T"Show Target", {}, T"Shows the current aimbot target", function(state)
+    if state then 
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 4))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 4))
+    end
+end, ReadShort(aimbot_settings) & (1 << 4) == (1 << 4))
+
+aimbot:toggle(T"Damage Override", {}, T"Whether or not to override the damage, this will make the aimbot use custom damage value instead of default weapon damage", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 5))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 5))
+    end
+end, ReadShort(aimbot_settings) & (1 << 5) == (1 << 5))
+
+aimbot:toggle(T"Chance Based", {}, T"Whether or not the aimbot is chance based or not (this will stop the aimbot from hitting every single shot making it look more legit)", function(state)
+    if state then 
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 6))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 6))
+    end
+end, ReadShort(aimbot_settings) & (1 << 6) == (1 << 6))
+
+aimbot:textslider(T"Bone", {}, T"The bone to shoot at", {"Head", "Chest", "Stomach", "Left Foot", "Right Leg", "Left Hand", "Right Hand", "Pelvis", "Left Leg", "Left Knee", "Left Arm"}, function(bone_index)
+    local bone = bones[bone_index]
+    local v = ReadLong(aimbot_settings)
+    WriteLong(aimbot_settings, ((v >> 16 & ~(0x1FFFF) | bone) << 16) | v & 0xFFFF) -- 0100100001100001011100000111000001111001001000000101001101101011011010010110010001100100011010010110111001100111
+    v = nil
+    bone = nil
+end)
+
+aimbot:slider(T"Aimbot FOV", {}, T"The FOV the player must be in for the aimbot to aimbot", 1, 180, ReadLong(aimbot_settings) >> 33 & 0xFF, 1, function(fov)
+    local v = ReadLong(aimbot_settings)
+    WriteLong(aimbot_settings, ((v >> 33 & ~(0xFF) | fov) << 33) | v & 0x1FFFFFFFF) -- 0100100001100001011100000111000001111001001000000101001101101011011010010110010001100100011010010110111001100111
+    v = nil
+end)
+
+aimbot:slider(T"Damage", {}, T"The damage that will be dealt to the player", 0, 65535, ReadShort(damage), 1, function(new_damage)
+    WriteShort(damage, new_damage)
+end)
+
+aimbot:slider(T"Chance", {}, T"The chance the aimbot will hit the player", 0, 100, ReadLong(aimbot_settings) >> 49 & 0xFF, 1, function(chance)
+    local v = ReadLong(aimbot_settings)
+    WriteLong(aimbot_settings, ((v >> 49 & ~(0xFF) | chance) << 49) | v & 0x1FFFFFFFFFFFFFFFF) -- GL bruh and not grenade launcher
+    v = nil
+end)
+
+local target_list = aimbot:list(T"Targets", {}, T"Aimbot targets")
+
+players.add_command_hook(function(pid, root)
+    WriteInt(targets_bitfield, ReadInt(targets_bitfield) | (1 << pid))
+    local name = players.get_name(pid)
+    if pid == PLAYER_ID then return end
+    if ref_by_rel_path(target_list, name):isValid() then return end
+    target_list:toggle(players.get_name(pid), {}, "", function(state)
+        if state then
+            WriteInt(targets_bitfield, ReadInt(targets_bitfield) | (1 << pid))
+        else
+            WriteInt(targets_bitfield, ReadInt(targets_bitfield) & ~(1 << pid))
+        end
+    end, ReadInt(targets_bitfield) & (1 << pid) == (1 << pid))
+end)
+
+players.on_leave(function(pid, name)
+    WriteInt(targets_bitfield, ReadInt(targets_bitfield) & ~(1 << pid))
+    local ref = ref_by_rel_path(target_list, name)
+    if ref:isValid() then
+        ref:delete()
+    end
+end)
+
+aimbot:divider("Ped Aimbot")
+
+local ped_in_fov = false
+aimbot:toggle_loop(T"Aimbot", {}, "Enables ped aimbot", function()
+    local settings = ReadShort(aimbot_settings)
+    local ped = get_closest_ped(settings & (1 << 12) == (1 << 12), utils.MAX_INT, settings & (1 << 9) == (1 << 9))
+    local visible = HasEntityClearLosToEntity(players.user_ped(), ped, 17)
+
+    if settings & (1 << 10) == (1 << 10) then
+        local ped_bone = GetPedBoneCoords(ped, ped_aimbot_settings & 0x1FFFF, 0.0, 0.0, 0.0)
+        util.draw_ar_beacon(ped_bone)
+    end
+
+    if settings & (1 << 8) == (1 << 8) then
+        for i, bone in pairs(aimbot_bones) do
+            if bone_within_bounds(ped, bone, bounds, ped_aimbot_settings >> 17 & 0xFF) and not IsEntityDead(ped) then
+                settings |= (1 << 13)
+                break
+            else
+                settings &= ~(1 << 13)
+            end
+        end
+    else
+        settings |= (1 << 13)
+    end
+
+    if IsPedShooting(players.user_ped()) then
+        if settings & (1 << 13) == (1 << 13) then
+            local weapon = GetSelectedPedWeapon(players.user_ped())
+            local damage = GetWeaponDamage(weapon)
+            local attacker = GetPedBoneCoords(players.user_ped(), 31086, 0.0, 0.0, 0.0)
+            local victim = GetPedBoneCoords(ped, ped_aimbot_settings & 0x1FFFF, 0.0, 0.0, 0.0)
+
+            if settings & (1 << 11) == (1 << 11) then
+                damage = ped_aimbot_settings >> 25 & 0xFF
+            end
+
+            if not IsEntityDead(ped) then
+                if ped_aimbot_settings & (1 << 9) == (1 << 9) then
+                    if not IsPedInAnyVehicle(ped) then
+                        if ped_aimbot_settings & (1 << 12) == (1 << 12) and visible then
+                            ShootSingleBulletBetweenCoordsIgnoreEntity(attacker.x, attacker.y, attacker.z, victim.x, victim.y, victim.z, damage, true, weapon, players.user_ped(), true, false, 1.0, players.user_ped(), true)
+                        else
+                            local bullet_spawn = GetPedBoneCoords(ped, 24816, 0.0, 0.0, 0.0)
+                            ShootSingleBulletBetweenCoordsIgnoreEntity(bullet_spawn.x, bullet_spawn.y, bullet_spawn.z, victim.x, victim.y, victim.z, damage, true, weapon, players.user_ped(), true, false, 1.0, players.user_ped(), true)
+                        end
+                    end
+                else
+                    if ped_aimbot_settings & (1 << 12) == (1 << 12) and visible then
+                        ShootSingleBulletBetweenCoordsIgnoreEntity(attacker.x, attacker.y, attacker.z, victim.x, victim.y, victim.z, damage, true, weapon, players.user_ped(), true, false, 1.0, players.user_ped(), true)
+                    else
+                        local bullet_spawn = GetPedBoneCoords(ped, 24816, 0.0, 0.0, 0.0)
+                        ShootSingleBulletBetweenCoordsIgnoreEntity(bullet_spawn.x, bullet_spawn.y, bullet_spawn.z, victim.x, victim.y, victim.z, damage, true, weapon, players.user_ped(), true, false, 1.0, players.user_ped(), true)
+                    end
+                end
+            end
+        end
+    end
+end)
+
+aimbot:divider("")
+
+aimbot:toggle(T"Use FOV", {}, T"Whether or not to use FOV for the aimbot", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 8))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 8))
+    end
+end, ReadShort(aimbot_settings) & (1 << 8) == (1 << 8))
+
+aimbot:toggle(T"Ignore Vehicles", {}, T"Whether or not to ignore vehicles", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 9))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 9))
+    end
+end, ReadShort(aimbot_settings) & (1 << 9) == (1 << 9))
+
+aimbot:toggle(T"Show Target", {}, T"Shows the current aimbot target", function(state)
+    if state then 
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 10))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 10))
+    end
+end, ReadShort(aimbot_settings) & (1 << 10) == (1 << 10))
+
+aimbot:toggle(T"Damage Override", {}, T"Whether or not to override the damage, this will make the aimbot use custom damage value instead of default weapon damage", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 11))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 11))
+    end
+end, ReadShort(aimbot_settings) & (1 << 11) == (1 << 11))
+
+aimbot:toggle(T"Visible Check", {}, T"Whether or not to check if the player is visible", function(state)
+    if state then
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) | (1 << 12))
+    else
+        WriteShort(aimbot_settings, ReadShort(aimbot_settings) & ~(1 << 12))
+    end
+end, ReadShort(aimbot_settings) & (1 << 12) == (1 << 12))
+
+aimbot:textslider(T"Bone", {}, T"The bone to shoot at", {"Head", "Chest", "Stomach", "Left Foot", "Right Leg", "Left Hand", "Right Hand", "Pelvis", "Left Leg", "Left Knee", "Left Arm"}, function(bone_index)
+    local bone = bones[bone_index]
+    ped_aimbot_settings = ~(0x1FFFF) | bone
+end)
+
+aimbot:slider(T"Aimbot FOV", {}, T"The FOV the ped must be in for the aimbot to aimbot", 1, 180, ped_aimbot_settings >> 17 & 0xFF, 1, function(fov)
+    ped_aimbot_settings = (ped_aimbot_settings >> 17 & ~(0xFF) | fov) << 17 | ped_aimbot_settings & 0x1FFFF
+end)
+
+aimbot:slider(T"Damage", {}, T"The damage to override the weapon damage with", 1, 255, ped_aimbot_settings >> 25 & 0xFF, 1, function(damage)
+    ped_aimbot_settings = (ped_aimbot_settings >> 25 & ~(0xFF) | damage) << 25 | ped_aimbot_settings & 0x1FFFF
+end)

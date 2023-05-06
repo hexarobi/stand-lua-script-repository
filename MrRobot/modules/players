@@ -1,0 +1,818 @@
+local root = menu.my_root()
+local shadow_root = menu.shadow_root()
+local T = require("translations")
+local utils = require("utils")
+local Bitfield = require("bitfield")
+local vehicle_models = require("vehicle_models")
+
+local fs = filesystem
+local script_root = fs.scripts_dir() .. "/MrRobot"
+local script_images = script_root .. "/images"
+
+--[[Hash (int)]] local function GetEntityModel(--[[Entity (int)]] entity)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.end_call_2(0x9F47B058362C84B5)return native_invoker.get_return_value_int()end
+--[[void]] local function SetVehicleDoorsShut(--[[Vehicle (int)]] vehicle,--[[BOOL (bool)]] closeInstantly)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.push_arg_bool(closeInstantly)native_invoker.end_call_2(0x781B3D62BB013EF5)end
+--[[void]] local function DetonateVehiclePhoneExplosiveDevice()native_invoker.begin_call()native_invoker.end_call_2(0xEF49CF0270307CBE)end
+--[[Vehicle (int)]] local function GetVehiclePedIsIn(--[[Ped (int)]] ped,--[[BOOL (bool)]] includeLastVehicle)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_bool(includeLastVehicle)native_invoker.end_call_2(0x9A9112A0FE9A4713)return native_invoker.get_return_value_int()end
+--[[void]] local function SetVehicleDoorsLockedForPlayer(--[[Vehicle (int)]] vehicle,--[[Player (int)]] player,--[[BOOL (bool)]] toggle)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.push_arg_int(player)native_invoker.push_arg_bool(toggle)native_invoker.end_call_2(0x517AAF684BB50CD1)end
+--[[Hash (int)]] local function NetworkHashFromPlayerHandle(--[[Player (int)]] player)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.end_call_2(0xBC1D768F2F5D6C05)return native_invoker.get_return_value_int()end
+--[[BOOL (bool)]] local function IsPedInAnyVehicle(--[[Ped (int)]] ped,--[[BOOL (bool)]] atGetIn)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_bool(atGetIn)native_invoker.end_call_2(0x997ABD671D25CA0B)return native_invoker.get_return_value_bool()end
+--[[BOOL (bool)]] local function DecorSetInt(--[[Entity (int)]] entity,--[[string]] propertyName,--[[int]] value)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_string(propertyName)native_invoker.push_arg_int(value)native_invoker.end_call_2(0x0CE3AA5E1CA19E10)return native_invoker.get_return_value_bool()end
+--[[void]] local function ClearVehiclePhoneExplosiveDevice()native_invoker.begin_call()native_invoker.end_call_2(0xAA3F739ABDDCF21F)end
+--[[Vehicle (int)]] local function NetToVeh(--[[int]] netHandle)native_invoker.begin_call()native_invoker.push_arg_int(netHandle)native_invoker.end_call_2(0x367B936610BA360C)return native_invoker.get_return_value_int()end
+--[[BOOL (bool)]] local function HasVehiclePhoneExplosiveDevice()native_invoker.begin_call()native_invoker.end_call_2(0x6ADAABD3068C5235)return native_invoker.get_return_value_bool()end
+--[[Ped (int)]] local function GetPlayerPed(--[[Player (int)]] player)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.end_call_2(0x50FAC3A3E030A6E1)return native_invoker.get_return_value_int()end
+--[[void]] local function AddVehiclePhoneExplosiveDevice(--[[Vehicle (int)]] vehicle)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.end_call_2(0x99AD4CCCB128CBC9)end
+--[[BOOL (bool)]] local function StartNetworkedParticleFxNonLoopedOnEntity(--[[string]] effectName,--[[Entity (int)]] entity,--[[float]] offsetX,--[[float]] offsetY,--[[float]] offsetZ,--[[float]] rotX,--[[float]] rotY,--[[float]] rotZ,--[[float]] scale,--[[BOOL (bool)]] axisX,--[[BOOL (bool)]] axisY,--[[BOOL (bool)]] axisZ)native_invoker.begin_call()native_invoker.push_arg_string(effectName)native_invoker.push_arg_int(entity)native_invoker.push_arg_float(offsetX)native_invoker.push_arg_float(offsetY)native_invoker.push_arg_float(offsetZ)native_invoker.push_arg_float(rotX)native_invoker.push_arg_float(rotY)native_invoker.push_arg_float(rotZ)native_invoker.push_arg_float(scale)native_invoker.push_arg_bool(axisX)native_invoker.push_arg_bool(axisY)native_invoker.push_arg_bool(axisZ)native_invoker.end_call_2(0xC95EB1DB6E92113D)return native_invoker.get_return_value_bool()end
+--[[Vector3 (vector3)]] local function GetEntityCoords(--[[Entity (int)]] entity,--[[BOOL (bool)]] alive)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_bool(alive)native_invoker.end_call_2(0x3FEF770D40960D5A)return native_invoker.get_return_value_vector3()end
+--[[void]] local function AddOwnedExplosion(--[[Ped (int)]] ped,--[[float]] x,--[[float]] y,--[[float]] z,--[[int]] explosionType,--[[float]] damageScale,--[[BOOL (bool)]] isAudible,--[[BOOL (bool)]] isInvisible,--[[float]] cameraShake)native_invoker.begin_call()native_invoker.push_arg_int(ped)native_invoker.push_arg_float(x)native_invoker.push_arg_float(y)native_invoker.push_arg_float(z)native_invoker.push_arg_int(explosionType)native_invoker.push_arg_float(damageScale)native_invoker.push_arg_bool(isAudible)native_invoker.push_arg_bool(isInvisible)native_invoker.push_arg_float(cameraShake)native_invoker.end_call_2(0x172AA1B624FA1013)end
+--[[void]] local function AddExplosion(--[[float]] x,--[[float]] y,--[[float]] z,--[[int]] explosionType,--[[float]] damageScale,--[[BOOL (bool)]] isAudible,--[[BOOL (bool)]] isInvisible,--[[float]] cameraShake,--[[BOOL (bool)]] noDamage)native_invoker.begin_call()native_invoker.push_arg_float(x)native_invoker.push_arg_float(y)native_invoker.push_arg_float(z)native_invoker.push_arg_int(explosionType)native_invoker.push_arg_float(damageScale)native_invoker.push_arg_bool(isAudible)native_invoker.push_arg_bool(isInvisible)native_invoker.push_arg_float(cameraShake)native_invoker.push_arg_bool(noDamage)native_invoker.end_call_2(0xE3AD2BDBAEE269AC)end
+--[[void]] local function StartVehicleAlarm(--[[Vehicle (int)]] vehicle)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.end_call_2(0xB8FF7AB45305C345)end
+--[[void]] local function SetVehicleAlarm(--[[Vehicle (int)]] vehicle,--[[BOOL (bool)]] state)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.push_arg_bool(state)native_invoker.end_call_2(0xCDE5E70C1DDB954C)end
+--[[BOOL (bool)]] local function IsVehicleAlarmActivated(--[[Vehicle (int)]] vehicle)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.end_call_2(0x4319E335B71FFF34)return native_invoker.get_return_value_bool()end
+--[[void]] local function SetInvertVehicleControls(--[[Vehicle (int)]] vehicle,--[[BOOL (bool)]] state)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.push_arg_bool(state)native_invoker.end_call_2(0x5B91B229243351A8)end
+--[[void]] local function SetVehicleLightMultiplier(--[[Vehicle (int)]] vehicle,--[[float]] multiplier)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.push_arg_float(multiplier)native_invoker.end_call_2(0xB385454F8791F57C)end
+--[[void]] local function SetVehicleFixed(--[[Vehicle (int)]] vehicle)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.end_call_2(0x115722B1B9C14C1C)end
+--[[Vector3 (vector3)]] local function GetOffsetFromEntityInWorldCoords(--[[Entity (int)]] entity,--[[float]] offsetX,--[[float]] offsetY,--[[float]] offsetZ)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_float(offsetX)native_invoker.push_arg_float(offsetY)native_invoker.push_arg_float(offsetZ)native_invoker.end_call_2(0x1899F328B0E12848)return native_invoker.get_return_value_vector3()end
+--[[float]] local function GetEntityHeading(--[[Entity (int)]] entity)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.end_call_2(0xE83D4F9BA2A38914)return native_invoker.get_return_value_float()end
+--[[void]] local function SetVehicleForwardSpeed(--[[Vehicle (int)]] vehicle,--[[float]] speed)native_invoker.begin_call()native_invoker.push_arg_int(vehicle)native_invoker.push_arg_float(speed)native_invoker.end_call_2(0xAB54A438726D25D5)end
+--[[void]] local function SetEntityNoCollisionEntity(--[[Entity (int)]] entity1,--[[Entity (int)]] entity2,--[[BOOL (bool)]] thisFrameOnly)native_invoker.begin_call()native_invoker.push_arg_int(entity1)native_invoker.push_arg_int(entity2)native_invoker.push_arg_bool(thisFrameOnly)native_invoker.end_call_2(0xA53ED5520C07654A)end
+--[[void]] local function FreezeEntityPosition(--[[Entity (int)]] entity,--[[BOOL (bool)]] toggle)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_bool(toggle)native_invoker.end_call_2(0x428CA6DBD1094446)end
+--[[void]] local function SetEntityVisible(--[[Entity (int)]] entity,--[[BOOL (bool)]] toggle,--[[BOOL (bool)]] p2)native_invoker.begin_call()native_invoker.push_arg_int(entity)native_invoker.push_arg_bool(toggle)native_invoker.push_arg_bool(p2)native_invoker.end_call_2(0xEA1C610A04DB6BBB)end
+--[[BOOL (bool)]] local function NetworkIsFriend(--[[Any* (pointer)]] gamerHandle)native_invoker.begin_call()native_invoker.push_arg_pointer(gamerHandle)native_invoker.end_call_2(0x1A24A179F9B31654)return native_invoker.get_return_value_bool()end
+--[[void]] local function NetworkHandleFromPlayer(--[[Player (int)]] player,--[[Any* (pointer)]] gamerHandle,--[[int]] gamerHandleSize)native_invoker.begin_call()native_invoker.push_arg_int(player)native_invoker.push_arg_pointer(gamerHandle)native_invoker.push_arg_int(gamerHandleSize)native_invoker.end_call_2(0x388EB2B86C73B6B3)end
+
+-- others
+local ScriptGlobal = memory.script_global
+local ReadInt = memory.read_int
+local ReadShort = memory.read_short
+local ReadByte = memory.read_byte
+local ReadFloat = memory.read_float
+local ReadLong = memory.read_long
+local WriteInt = memory.write_int
+local WriteShort = memory.write_short
+local WriteByte = memory.write_byte
+local WriteUByte = memory.write_ubyte
+local WriteFloat = memory.write_float
+local WriteLong = memory.write_long
+local Alloc = memory.alloc
+local ref_by_rel_path = menu.ref_by_rel_path
+local set_can_migrate = entities.set_can_migrate
+local handle_to_pointer = entities.handle_to_pointer
+local add_command_hook = players.add_command_hook
+local on_leave = players.on_leave
+local ref_by_rel_path = menu.ref_by_rel_path
+local ref_by_path = menu.ref_by_path
+local create_tick_handler = util.create_tick_handler
+local get_current_menu_list = menu.get_current_menu_list
+local reverse_joaat = util.reverse_joaat
+local get_label_text = util.get_label_text
+local trigger_script_event = util.trigger_script_event
+local collectgarbage = collectgarbage
+local get_all_vehicles_as_pointers = entities.get_all_vehicles_as_pointers
+local get_position = entities.get_position
+local detach_wheel = entities.detach_wheel
+
+local PV_SLOT <constexpr> = 2359296 + 1 + (0 * 5568) + 681 + 2
+local interior = nil
+
+local settings = Alloc(1)
+local gamer_handle = Alloc(104)
+WriteUByte(settings, 0)
+
+local vehicles_spawned = {}
+
+local player_root = root:list(T"Players", {T"players"}, T"Players")
+
+local function GetNetworkId(pid)
+    return ReadInt(ScriptGlobal(2657589 + 1 + (pid * 466) + 38))
+end
+
+local function SetNetworkId(pid, net_id)
+    WriteInt(ScriptGlobal(2657589 + 1 + (pid * 466) + 38), net_id)
+end
+
+local function GetVehicleFromNetId(pid)
+    return NetToVeh(GetNetworkId(pid))
+end
+
+local function DisplayRangeMessage(pid=-1)
+    if pid ~= PLAYER_ID then
+        util.toast(T"You are out of range of their vehicle, get closer or spectate")
+    else
+        util.toast(T"You are out of range of your vehicle, get closer or spectate")
+    end
+end
+
+local function GetPersonalVehicleData(slot=0)
+    local pv_slot = ScriptGlobal(PV_SLOT)
+    slot = slot ?? ReadInt(ScriptGlobal(PV_SLOT))
+
+    return ScriptGlobal(1586468 + 1 + (slot * 142))
+end
+
+local function SetPersonalVehicleSlot(slot)
+    WriteInt(ScriptGlobal(PV_SLOT), slot)
+end
+
+local function SpoofVehicle(target, localplayer, state)
+    local remote_veh = GetVehicleFromNetId(target)
+    local remote_hash = NetworkHashFromPlayerHandle(target)
+    local local_hash = NetworkHashFromPlayerHandle(localplayer)
+
+    if remote_veh ~= 0 then
+        if state then
+            local veh_data = GetPersonalVehicleData(0)
+            local bitfield = Bitfield.new(ReadInt(veh_data + 0x338))
+
+            SetPersonalVehicleSlot(0)
+            bitfield:BitSet(1 << 0)
+            bitfield(veh_data + 0x338, 32)
+            SetNetworkId(localplayer, GetNetworkId(target))
+
+            DecorSetInt(remote_veh, "Player_Vehicle", local_hash)
+            DecorSetInt(remote_veh, "Previous_Owner", local_hash)
+            bitfield = nil
+        else
+            local veh_data = GetPersonalVehicleData(0)
+            local bitfield = Bitfield.new(ReadInt(veh_data + 0x338))
+
+            DecorSetInt(remote_veh, "Player_Vehicle", remote_hash)
+            DecorSetInt(remote_veh, "Previous_Owner", remote_hash)
+
+            SetPersonalVehicleSlot(0)
+            bitfield:BitClear(1 << 0)
+            bitfield(veh_data + 0x338, 32)
+            SetNetworkId(localplayer, -1)
+
+            bitfield = nil
+            veh_data = nil
+        end
+    end
+
+    remote_veh, remote_hash, local_hash = nil, nil, nil
+end
+
+local function SoftSpoof(target, localplayer, state)
+    local remote_veh = GetVehicleFromNetId(target)
+    local remote_hash = NetworkHashFromPlayerHandle(target)
+    local local_hash = NetworkHashFromPlayerHandle(localplayer)
+
+    if remote_veh ~= 0 then
+        if state then
+            SetNetworkId(localplayer, GetNetworkId(target))
+        else
+            SetNetworkId(localplayer, -1)
+        end
+    end
+
+    remote_veh, remote_hash, local_hash = nil, nil, nil
+end
+
+local function GetTheFuckOut(remote_target)
+    trigger_script_event(1 << remote_target, {1718315579, 1, 0, 1, 0})
+end
+
+local function TakeoverKick(remote_target)
+    local remote_veh = GetVehicleFromNetId(remote_target)
+    local local_hash = NetworkHashFromPlayerHandle(PLAYER_ID)
+
+    if remote_veh ~= 0 then
+        SpoofVehicle(remote_target, PLAYER_ID, true)
+        util.yield(100)
+        GetTheFuckOut(remote_target)
+
+        repeat
+            util.yield_once()
+        until not IsPedInAnyVehicle(GetPlayerPed(remote_target), false)
+
+        util.yield(200)
+        SpoofVehicle(remote_target, PLAYER_ID, false)
+    end
+
+    remote_veh, local_hash = nil, nil
+end
+
+local function ForceVehRespawn(remote_player)
+    local remote_veh = GetVehicleFromNetId(remote_player)
+    local remote_hash = NetworkHashFromPlayerHandle(remote_player)
+
+    if IsPedInAnyVehicle(GetPlayerPed(remote_player)) then
+        TakeoverKick(remote_player)
+        repeat
+            util.yield_once()
+        until not IsPedInAnyVehicle(GetPlayerPed(remote_target), false)
+        util.yield(200)
+    end
+
+    SoftSpoof(remote_player, PLAYER_ID, true)
+    DecorSetInt(remote_veh, "Previous_Owner", remote_hash)
+
+    remote_veh, remote_hash = nil, nil
+end
+
+local function SetOrgId(target)
+    local target_org = ScriptGlobal(1894573 + 1 + (target * 608) + 10)
+    local localplayer_org = ScriptGlobal(1894573 + 1 + (PLAYER_ID * 608) + 10)
+
+    WriteInt(localplayer_org, ReadInt(target_org))
+    target_org, localplayer_org = nil, nil
+end
+
+local function GetOrgVehicleNetId(target)
+    local target_org = ScriptGlobal(1894573 + 1 + (target * 608) + 10)
+    local org_id = ScriptGlobal(ReadInt(target_org))
+    local veh_netid = ScriptGlobal(1894573 + 1 + (ReadInt(org_id) * 608) + 10 + 75)
+end
+
+local function RamPlayer(pid, model)
+    local ped = GetPlayerPed(pid)
+    local pos = GetOffsetFromEntityInWorldCoords(ped, 0.0, -5.0, 0.0)
+
+    utils.request_model(model)
+
+    local veh = entities.create_vehicle(model, pos, GetEntityHeading(ped))
+    SetVehicleForwardSpeed(veh, utils.MAX_FLOAT)
+    if #vehicles_spawned > 10 then
+        for _, veh in ipairs(vehicles_spawned) do
+            entities.delete_by_handle(veh)
+        end
+    end
+
+    table.insert(vehicles_spawned, veh)
+end
+
+add_command_hook(function(pid, root)
+    NetworkHandleFromPlayer(pid, gamer_handle, 104 // 8)
+    WriteLong(PlayerList, ReadLong(PlayerList) | ((1 << pid) | ((NetworkIsFriend(gamer_handle)) and (1 << (0x20 + pid)) or 0)))
+
+    local name = players.get_name(pid)
+    if ref_by_rel_path(player_root, name):isValid() then return end
+
+    local proot = root
+    local other_root = player_root:list(name, {}, "")
+    local veh = nil
+
+    local veh_menu = nil
+    local model_ref = nil
+    veh_menu = proot:list(T"Personal Vehicle", {}, T"Personal Vehicle options", function()
+        create_tick_handler(function()
+            local item = get_current_menu_list()
+            veh = GetVehicleFromNetId(pid)
+
+            if item.menu_name ~= T"Personal Vehicle" then
+                collectgarbage("collect")
+                return false
+            end
+
+            if veh ~= nil then
+                model_ref.menu_name = T"Model" .. ": " .. get_label_text(reverse_joaat(GetEntityModel(veh)))
+            else
+                if model_ref.menu_name ~= T"Model" .. ": " .. T"None" then
+                    model_ref.menu_name = T"Model" .. ": " .. T"None"
+                end
+            end
+
+            veh = nil
+            item = nil
+        end)
+    end)
+
+    local bounty_active, bounty_amount, bounty_reward = nil, nil, nil
+
+    local script_events = shadow_root:list(T"Script Events", {}, T"Script Events")
+    local trolling = proot:list(T"Trolling", {}, T"Trolling options")
+    local organisation = shadow_root:list(T"Organisation", {}, T"Organisation")
+    local bounty = shadow_root:list(T"Bounty", {}, T"Bounty", function()
+        local ref = ref_by_rel_path(trolling, T"Bounty")
+        util.create_tick_handler(function()
+            local item = get_current_menu_list()
+            if item.menu_name ~= T"Bounty" then
+                collectgarbage("collect")
+                return false
+            end
+
+            local bounty_data = ScriptGlobal(1835504 + 4 + 1 + (pid * 3))
+            local reward_data = ScriptGlobal(1894573 + 1 + (pid * 608) + 599)
+
+            bounty_active.menu_name = T"Active" .. ": " .. (ReadByte(bounty_data) ~= 0)
+            bounty_amount.menu_name = T"Amount" .. ": " .. (ReadShort(bounty_data + 0x8))
+            bounty_reward.menu_name = T"Reward" .. ": " .. (ReadShort(reward_data))
+        end)
+    end)
+    local toxic = shadow_root:list(T"Toxic", {}, T"Toxic")
+    local veh_trolling = shadow_root:list(T"Vehicle", {}, T"Vehicle Trolling")
+    local crashes = shadow_root:list(T"Crashes", {}, T"Crashes")
+
+    veh_menu:divider(T"Vehicle Info")    
+    model_ref = veh_menu:readonly("", "")
+    veh_menu:divider("")
+
+    veh_menu:toggle(T"Force Scripthost", {}, T"Forces you to become scripthost, this is not needed for trolling features to work but it can help when they fail", function(state) 
+        WriteUByte(settings, ReadByte(settings) & ((state) and ~(1 << 0) or (1 << 0)))
+    end, ReadByte(settings) & (1 << 0) == (1 << 0))
+
+    if pid ~= PLAYER_ID then
+        veh_menu:toggle(T"Spectate", {}, T"Spectate the player", function(state)
+            local spectate_menu = menu.ref_by_rel_path(root, "Spectate")
+
+            if spectate_menu:isValid() then
+                local nuts = menu.ref_by_rel_path(spectate_menu, "Nuts Method")
+                if nuts:isValid() then
+                    nuts.value = state
+                end
+            end
+        end)
+    end
+
+    veh_menu:toggle_loop(T"Lock Doors", {}, T"Locks the doors of the player's vehicle", function()
+        if ReadByte(settings) & (1 << 0) == (1 << 0) then utils.force_scripthost() end 
+        veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            pcall(function()
+                utils.request_control(veh)
+                SetVehicleDoorsLockedForPlayer(veh, pid, true)
+                SetVehicleDoorsShut(veh, true)
+            end)
+        else
+            ref_by_rel_path(veh_menu, "Lock Doors").value = false
+            DisplayRangeMessage(pid)
+        end
+
+        veh = nil
+    end,
+    function()
+        veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            SetVehicleDoorsLockedForPlayer(veh, pid, false)
+            SetVehicleDoorsShut(veh, false)
+        end
+
+        veh = nil
+    end)
+
+    veh_menu:toggle_loop(T"Send Vehicle To Heaven", {}, T"Sends the player's vehicle to heaven", function()
+        if ReadByte(settings) & (1 << 0) == (1 << 0) then utils.force_scripthost() end  
+        veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            pcall(function()
+                utils.request_control(veh)
+                SetVehicleDoorsShut(veh, false)
+            end)
+        else
+            ref_by_rel_path(veh_menu, "Send Vehicle To Heaven").value = false
+            DisplayRangeMessage(pid)
+        end
+
+        veh = 0
+    end,
+    function() 
+        veh = GetVehicleFromNetId(pid)
+        if veh ~= nil then
+            SetVehicleDoorsShut(veh, true)
+        end
+
+        veh = nil
+    end)
+
+    veh_menu:toggle_loop(T"Deny Control Requests", {}, T"Prevents the player from taking control of their vehicle", function()
+        if ReadByte(settings) & (1 << 0) == (1 << 0) then utils.force_scripthost() end 
+        veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            pcall(function()
+                local ptr = handle_to_pointer(veh)
+                utils.request_control(veh)
+                set_can_migrate(ptr, false)
+            end)
+        else
+            ref_by_rel_path(veh_menu, "Deny Control Requests").value = false
+            DisplayRangeMessage(pid)
+        end
+
+        veh = nil
+    end,
+    function()
+        veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            local ptr = handle_to_pointer(veh)
+            set_can_migrate(ptr, true)
+        end
+
+        veh = nil
+    end)
+
+    veh_menu:toggle(T"Spoof Vehicle", {}, T"Spoof this players personal vehicle as your own", function(state)
+        if ReadByte(settings) & (1 << 0) == (1 << 0) then utils.force_scripthost() end
+        if GetVehicleFromNetId(pid) ~= 0 then
+            SpoofVehicle(pid, PLAYER_ID, state)
+        else
+            DisplayRangeMessage(pid)
+            ref_by_rel_path(veh_menu, "Spoof Vehicle").value = false
+        end
+    end)
+
+    veh_menu:action(T"Add Explosive Device", {}, T"Add explosive device to the players vehicle", function()
+        local veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            AddVehiclePhoneExplosiveDevice(veh)
+        else
+            if IsPedInAnyVehicle(GetPlayerPed(pid)) then
+                local veh = GetVehPedIsIn(GetPlayerPed(pid), false)
+                AddVehiclePhoneExplosiveDevice(veh)
+            end
+        end
+    end)
+
+    veh_menu:action(T"Remove Explosive Device", {}, T"Remove explosive device from the players vehicle", function()
+        local veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            ClearVehiclePhoneExplosiveDevice(veh)
+        else
+            if IsPedInAnyVehicle(GetPlayerPed(pid)) then
+                local veh = GetVehPedIsIn(GetPlayerPed(pid), false)
+                ClearVehiclePhoneExplosiveDevice(veh)
+            end
+        end
+    end)
+
+    veh_menu:action(T"Explode Device", {}, T"Explode the explosive device in the players vehicle", function(state)
+        local veh = GetVehicleFromNetId(pid)
+        if veh ~= 0 then
+            DetonateVehiclePhoneExplosiveDevice(veh)
+        else
+            if IsPedInAnyVehicle(GetPlayerPed(pid)) then
+                local veh = GetVehPedIsIn(GetPlayerPed(pid), false)
+                DetonateVehiclePhoneExplosiveDevice(veh)
+            end
+        end
+    end)
+
+    veh_menu:action(T"Force Respawn", {}, T"Force the player's personal vehicle to respawn", function()
+        if ReadByte(settings) & (1 << 0) == (1 << 0) then utils.force_scripthost() end
+        ForceVehRespawn(pid)
+    end)
+
+    veh_menu:divider("")
+    local veh_kicks = veh_menu:list(T"Kicks", {}, T"Vehicle kicks")
+    veh_kicks:action(T"Takeover", {}, T"Takeover kick (a discrete vehicle kick)", function()
+        if ReadByte(settings) & (1 << 0) == (1 << 0) then utils.force_scripthost() end
+        TakeoverKick(pid)
+    end)
+
+    organisation = trolling:attach(organisation)
+    organisation:toggle_loop(T"Force Join", {}, T"Force join the players organisation, they cannon kick you as you will instantly join back", function()
+        if ReadByte(settings) & (1 << 0) == (1 << 0) then utils.force_scripthost() end
+        SetOrgId(pid)
+    end)
+
+    script_events = trolling:attach(script_events)
+
+    local events = {
+        "Storymode", 
+        "Fake Register CEO", 
+        "Fake Register MC", 
+        "Fake Register VIP",
+        "Fake Off The Radar",
+        "Fake Ghost Org",
+        "Mugged",
+        "Ewo",
+        "Ghosted",
+        "Destroyed Vehicle Cargo",
+        "Cash Stolen",
+        "Cash Banked",
+        "Cash Removed"
+    }
+
+    script_events:list_select(T"Event", {}, T"The script event to send", events, 1, function(index) end)
+    script_events:action(T"Send", {}, T"Send the script event to the player", function()
+        local index = ref_by_rel_path(script_events, "Event").value
+        local event = events[index]
+
+        pluto_switch event do
+            case "Storymode":
+                trigger_script_event(1 << pid, {-62318441, 999999, 999999, 159999, 999990})
+                break
+            case "Fake Register CEO":
+                utils.register_ceo(pid)
+                break
+            case "Fake Register MC":
+                utils.register_mc(pid)
+                break
+            case "Fake Register VIP":
+                utils.register_vip(pid)
+                break
+            case "Fake Off The Radar":
+                utils.off_radar(pid)
+                break
+            case "Fake Ghost Org":
+                utils.ghost_org(pid)
+                break
+            case "Mugged":
+                utils.successfully_mugged(pid, utils.MAX_INT)
+                break
+            case "Ewo":
+                utils.player_ewo(pid, PLAYER_ID)
+                break
+            case "Ghosted":
+                utils.become_ghosted(pid, PLAYER_ID)
+                break
+            case "Destroyed Vehicle Cargo":
+                utils.destroyed_vehicle_cargo(pid, PLAYER_ID)
+                break
+            case "Cash Stolen":
+                utils.cash_stolen(pid, tonumber(utils.display_onscreen_keyboard()))
+                break
+            case "Cash Banked":
+                utils.cash_banked(pid, tonumber(utils.display_onscreen_keyboard()))
+                break
+            case "Cash Removed":
+                utils.cash_removed(pid, tonumber(utils.display_onscreen_keyboard()))
+                break
+        end
+
+        event = nil
+        index = nil
+    end)
+
+    script_events:divider("")
+    script_events:toggle_loop(T"Annoy Player", {}, T"Spam the player with loads of notifications", function()
+        utils.successfully_mugged(pid, math.random(utils.MIN_INT, utils.MAX_INT))
+        util.yield(100)
+    end)
+
+    bounty = trolling:attach(bounty)
+
+    bounty:divider(T"Bounty")
+    bounty_active = bounty:readonly(T"Bounty")
+    bounty_amount = bounty:readonly(T"Amount")
+    bounty_reward = bounty:readonly(T"Reward")
+    bounty:divider("")
+
+    bounty:action(T"Set Bounty", {}, T"Set an anonymous undetectable bounty on the player, they will never even know that they have a bounty on them", function()
+        local amount = tonumber(utils.display_onscreen_keyboard())
+        if amount ~= nil then
+            if amount < 0 or amount > 10000 then
+                return util.toast(T"Invalid amount")
+            end
+
+            utils.set_player_bounty(pid, 0, false)
+            utils.set_player_bounty(pid, amount, true)
+        end
+
+        amount = nil
+    end)
+
+    bounty:action(T"Max Bounty", {}, T"Set the maximum bounty a player can have", function()
+        utils.set_player_bounty(pid, 0, false)
+        utils.set_player_bounty(pid, 10000, true)
+    end)
+
+    bounty:action(T"Remove Bounty", {}, T"Remove the bounty on the player", function()
+        utils.set_player_bounty(pid, 0, false)
+    end)
+
+    bounty:toggle(T"Set Bounty Reward", {}, T"Set the reward amount for the players bounty, this is how much the player that kills them will get", function(state)
+        local ref = ref_by_rel_path(bounty, "Set Bounty Reward")
+
+        if state then
+            local amount = tonumber(utils.display_onscreen_keyboard())
+            if amount ~= nil then
+                if amount < 0 or amount > 10000 then
+                    amount = 10000
+                end
+
+                util.create_tick_handler(function()
+                    if not ref.value then
+                        ref = nil
+                        amount = nil
+                        collectgarbage("collect")
+                        return false
+                    end
+                    
+                    utils.set_player_bounty_reward(pid, amount)
+                end)
+            end
+        end
+    end)
+
+    bounty:toggle_loop(T"Max Bounty Reward", {}, T"Set the maximum bounty reward a player can have", function()
+        utils.set_player_bounty_reward(pid, 10000)
+    end)
+
+    bounty:toggle_loop(T"Remove Bounty Reward", {}, T"Remove the bounty reward on the player", function()
+        utils.set_player_bounty_reward(pid, 0)
+    end)
+
+    toxic = trolling:attach(toxic)
+
+    toxic:action(T"Send Corrupted Interior Invite", {}, T"This will result in a black screen for anyone that accepts the invite", function()
+        interior = interior ?? ScriptGlobal(1853910 + 1 + (PLAYER_ID * 862) + 267 + 33)
+        WriteInt(interior, -1)
+        utils.interior_invite(pid)
+        
+        interior = nil
+    end)
+
+    veh_trolling = trolling:attach(veh_trolling)
+    local wheels = veh_trolling:list(T"Wheels", {}, T"Wheels related trolling")
+    local individual_wheels = wheels:list(T"Individual Wheels", {}, T"")
+
+    wheels:action(T"Detach Wheels", {}, T"Detach wheels from the players vehicle", function()
+        local ped = GetPlayerPed(pid)
+        if IsPedInAnyVehicle(ped) then
+            local veh = GetVehiclePedIsIn(ped, false)
+            if veh ~= 0 then
+                local ptr = handle_to_pointer(veh)
+                utils.request_control_cb(veh, function(control)
+                    if control then
+                        for i = 0, 7 do
+                            detach_wheel(ptr, i)
+                        end
+                    else
+                        util.toast(T"Failed to request control of vehicle")
+                    end
+                end)
+            end
+        end
+    end)
+
+    local detachable_wheels = {
+        {index = 0, name = T"Left Front"},
+        {index = 1, name = T"Right Front"},
+        {index = 2, name = T"Left Rear"},
+        {index = 3, name = T"Right Rear"},
+        {index = 4, name = T"Left Middle"},
+        {index = 5, name = T"Right Middle"},
+    }
+
+    for i, wheel_data in pairs(detachable_wheels) do
+        individual_wheels:action(wheel_data.name, {}, T"Detach a wheel from the players vehicle", function()
+            local ped = GetPlayerPed(pid)
+            if IsPedInAnyVehicle(ped) then
+                local veh = GetVehiclePedIsIn(ped, false)
+                if veh ~= 0 then
+                    local ptr = handle_to_pointer(veh)
+                    utils.request_control_cb(veh, function(control)
+                        if control then
+                            detach_wheel(ptr, wheel_data.index)
+                        else
+                            util.toast(T"Failed to request control of vehicle")
+                        end
+                    end)
+                end
+            end
+        end)
+    end
+
+    wheels:toggle_loop(T"Wheels Spam", {}, T"Spam the player with wheels by detaching and fixing their vehicle", function()
+        local ped = GetPlayerPed(pid)
+        if IsPedInAnyVehicle(ped) then
+            local veh = GetVehiclePedIsIn(ped, false)
+            if veh ~= 0 then
+                local ptr = handle_to_pointer(veh)
+                utils.request_control_cb(veh, function(control)
+                    if control then
+                        for i = 0, 7 do
+                            detach_wheel(ptr, i)
+                        end
+
+                        util.yield(50)
+                        SetVehicleFixed(veh)
+                    end
+                end)
+            end
+        end
+    end)
+
+    veh_trolling:toggle_loop(T"Set Off Alarm", {}, T"Make their vehicles alarm constantly go off", function()
+        local ped = GetPlayerPed(pid)
+        if IsPedInAnyVehicle(ped) then
+            local veh = GetVehiclePedIsIn(ped, false)
+            if veh ~= 0 then
+                utils.request_control_cb(veh, function(control)
+                    if control then
+                        if not IsVehicleAlarmActivated(veh) then
+                            SetVehicleAlarm(veh, true)
+                            StartVehicleAlarm(veh)
+                        end
+                    else
+                        util.toast(T"Failed to request control of vehicle")
+                    end
+                end)
+            end
+        end
+    end)
+
+    veh_trolling:toggle_loop(T"Disrupt Driving", {}, T"Make the vehicle hard to drive, this also fucks with their minimap", function()
+        local ped = GetPlayerPed(pid)
+        if IsPedInAnyVehicle(ped) then
+            local veh = GetVehiclePedIsIn(ped, false)
+            if veh ~= 0 then
+                utils.request_control_cb(veh, function(control)
+                    if control then
+                        SetInvertVehicleControls(veh, true)
+                        SetVehicleLightMultiplier(veh, 0.0)
+                        if not IsVehicleAlarmActivated(veh) then
+                            SetVehicleAlarm(veh, true)
+                            StartVehicleAlarm(veh)
+                        end
+                    else
+                        util.toast(T"Failed to request control of vehicle")
+                    end
+                end)
+            end
+        end
+    end)
+
+    crashes = trolling:attach(crashes)
+
+    crashes:action(T"Wheel Crash", {}, T"Crashes the player by using a buggy wheel model", function()
+        local logo = directx.create_texture(script_images .. "/Loser.png")
+        local alpha, reverse_alpha = 0.0, false
+
+        create_tick_handler(function()
+            directx.draw_texture(logo, 0.15, 0.15, 0.5, 0.5, 0.5, 0.5, 0, { r=1, g=1, b=1, a=alpha })
+
+            if alpha < 1.7 and not reverse_alpha then
+                alpha += 0.007
+            else
+                reverse_alpha = true
+                alpha -= 0.007
+            end
+
+            if alpha <= 0 then
+                alpha, reverse_alpha, logo = nil, nil, nil
+                collectgarbage("collect")
+                return false
+            end
+        end)
+    end)
+
+    trolling:divider("")
+
+    trolling:action(T"Orbital Strike (owned)", {}, T"Launch an orbital strike on the player", function()
+        utils.request_named_ptfx_asset("scr_xm_orbital")
+        local ped = GetPlayerPed(pid)
+        local pos = GetEntityCoords(ped)
+        utils.set_using_orbital_cannon(true)
+
+        StartNetworkedParticleFxNonLoopedOnEntity("scr_xm_orbital_blast", ped, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0, false, false, false)
+        StartNetworkedParticleFxNonLoopedOnEntity("scr_xm_orbital_blast", ped, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 20.0, false, false, false)
+        StartNetworkedParticleFxNonLoopedOnEntity("scr_xm_orbital_blast", ped, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 30.0, false, false, false)
+
+        for i = 0, 5 do
+            AddOwnedExplosion(players.user_ped(), pos.x + (10 * i), pos.y + (10 * i), pos.z + (10 * i), 60, 100000.0, true, false, 1.0)
+        end
+
+        util.yield(1000)
+        utils.set_using_orbital_cannon(false)
+    end)
+
+    trolling:action(T"Orbital Strike (unowned)", {}, T"Launch an orbital strike on the player", function()
+        utils.request_named_ptfx_asset("scr_xm_orbital")
+        local ped = GetPlayerPed(pid)
+        local pos = GetEntityCoords(ped)
+
+        StartNetworkedParticleFxNonLoopedOnEntity("scr_xm_orbital_blast", ped, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0, false, false, false)
+        StartNetworkedParticleFxNonLoopedOnEntity("scr_xm_orbital_blast", ped, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 20.0, false, false, false)
+        StartNetworkedParticleFxNonLoopedOnEntity("scr_xm_orbital_blast", ped, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 30.0, false, false, false)
+
+        for i = 0, 5 do
+            AddExplosion(pos.x + (10 * i), pos.y + (10 * i), pos.z + (10 * i), 60, 100000.0, true, false, 1.0)
+        end
+    end)
+
+    local ram = veh_trolling:list(T"Ram With Vehicle", {}, T"Ram the player with a vehicle of your choice")
+    local model_name = "adder"
+    
+    ram:text_input(T"Custom Vehicle Model", {T"rammodel"}, T"The model of the vehicle to ram the player with", function(text)
+        model_name = text
+    end, model_name)
+
+    ram:list_select(T"Predefined Models", {}, T"Pre-defined models to ram the player with", vehicle_models, 1, function(index) end)
+
+    ram:action(T"Ram Custom", {}, T"Ram the player with the vehicle", function()
+        RamPlayer(pid, util.joaat(model_name))
+    end)
+
+    ram:action(T"Ram Predefined", {}, T"Ram the player with the vehicle", function()
+        RamPlayer(pid, util.joaat(vehicle_models[ref_by_rel_path(ram, T"Predefined Models").value]))
+    end)
+
+    ram:action(T"Clear Vehicles", {}, T"Clear all vehicles spawned", function()
+        for _, veh in ipairs(vehicles_spawned) do
+            entities.delete_by_handle(veh)
+        end
+    end)
+
+    other_root:attach(veh_menu:detach())
+    other_root:attach(trolling:detach())
+end)
+
+on_leave(function(pid, name)
+    WriteLong(PlayerList, ReadLong(PlayerList) & ~((1 << pid) | (1 << (0x20 + pid))))
+
+    local ref = ref_by_rel_path(player_root, name)
+    if ref:isValid() then
+        ref:delete()
+    end
+end)
